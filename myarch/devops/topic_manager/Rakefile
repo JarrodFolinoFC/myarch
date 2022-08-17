@@ -1,0 +1,47 @@
+require_relative 'topic_manager'
+
+TOPICS_TO_CREATE = %w[topic1 topic2 topic3].freeze
+
+namespace :setup do
+  desc 'Setup Development topics'
+  task main: :delete_all_topics do
+    topic_manager = TopicManager.new
+    topic_manager.create_topics(TOPICS_TO_CREATE)
+    puts "Topics created: #{TOPICS_TO_CREATE.join(', ')}"
+  end
+end
+
+desc 'List Topics'
+task :list_topics do
+  topic_manager = TopicManager.new
+  puts topic_manager.list_topics
+end
+
+desc 'Describe Topics'
+task :describe_topics do
+  topic_manager = TopicManager.new
+  puts topic_manager.describe_topics
+end
+
+desc 'Create Topics'
+task :create_topics, [:topics] do |t, args|
+  topic_manager = TopicManager.new
+  topics = args[:topics].split('|')
+  topic_manager.create_topics(topics)
+  puts "Topics created: #{topics.join(', ')}"
+end
+
+desc 'Delete Topics'
+task :delete_topics, [:topics] do |t, args|
+  topic_manager = TopicManager.new
+  topics = args[:topics].split('|')
+  topic_manager.delete_topics(topics)
+  puts "Topics deleted: #{topics.join(', ')}"
+end
+
+desc 'Delete All Topics'
+task :delete_all_topics do
+  topic_manager = TopicManager.new
+  topic_manager.delete_all_topics
+  puts 'All topics deleted'
+end
