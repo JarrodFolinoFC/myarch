@@ -1,0 +1,22 @@
+require 'rake'
+require_relative '../../lib/ruby/bunny_connection_factory'
+
+require_relative 'db/connection'
+require_relative 'write/sporting_event_listener'
+require_relative 'write/sporting_event_publisher'
+
+desc 'Run Sporting Event Listener'
+task :run_listener do
+  SportingEventListener.new.listen
+end
+
+desc 'Publish Sporting Event'
+task :publish do
+  SportingEventPublisher.new.hello
+end
+
+desc 'Migrate DB'
+task :db_migrate do
+  Connection.connect
+  require_relative 'db/migrate/migration_one'
+end

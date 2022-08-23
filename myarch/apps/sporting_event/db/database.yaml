@@ -1,0 +1,7 @@
+# database.yaml
+
+adapter: 'postgresql',
+host: 'tyke.db.elephantsql.com',
+username: 'tnemxqdp',
+password: 'DZVSYk6jNbXenJrVVhHHfhVRXk1KySbk',
+database: 'mydb'

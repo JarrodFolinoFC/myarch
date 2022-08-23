@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
 
 gem "bunny"
-gem "marche_hare"
+gem "activerecord"
+gem 'sqlite3'
+gem 'pg'
