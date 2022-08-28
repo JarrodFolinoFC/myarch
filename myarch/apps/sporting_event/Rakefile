@@ -3,7 +3,7 @@
 require 'rake'
 require_relative '../../lib/ruby/bunny_connection_factory'
 
-require_relative 'db/connection'
+require_relative 'db/db_connection'
 
 desc 'Run Sporting Event Listener'
 task :run_listener do
@@ -14,12 +14,12 @@ end
 desc 'Publish Sporting Event'
 task :publish do
   require_relative 'write/sporting_event_publisher'
-  SportingEventPublisher.new.send('write/data.csv')
+  SportingEventPublisher.new.send('data.csv')
 end
 
 desc 'Sporting Event Summary'
 task :summary do
-  Connection.connect
+  DbConnection.connect!
   require_relative 'models/sporting_event'
   puts ''"
   SportingEvent
@@ -29,6 +29,6 @@ end
 
 desc 'Migrate DB'
 task :db_migrate do
-  Connection.connect
+  DbConnection.connect!
   require_relative 'db/migrate/migration_one'
 end

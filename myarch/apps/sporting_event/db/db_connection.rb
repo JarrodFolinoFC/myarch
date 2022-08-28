@@ -3,8 +3,8 @@
 require 'active_record'
 require 'yaml'
 
-class Connection
-  def self.connect
+class DbConnection
+  def self.connect!
     ActiveRecord::Base.establish_connection(
       adapter: 'postgresql',
       host: ENV['DB_HOST'] || 'tyke.db.elephantsql.com',

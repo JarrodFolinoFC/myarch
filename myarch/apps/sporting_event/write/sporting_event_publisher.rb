@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
-require_relative '../../../lib/ruby/bunny_connection_factory'
+require_relative '../../../lib/ruby/messageable'
 require 'json'
 require 'csv'
 
 class SportingEventPublisher
-  def initialize
-    @conn = BunnyConnectionFactor.get_bunny
-    channel = @conn.create_channel
-    @exchange = channel.direct('test_exchange')
-    channel.queue('sporting_event_create', auto_delete: true).bind(@exchange, routing_key: 'key1')
-  end
+  include Messageable
 
   def parse_csv(file)
     data = []
@@ -27,6 +22,10 @@ class SportingEventPublisher
   end
 
   def send(data_file)
+    msg_connect!
+    @exchange = channel.direct('test_exchange')
+    channel.queue('sporting_event_create', auto_delete: true).bind(@exchange, routing_key: 'key1')
+
     json = parse_csv(data_file).to_json
     @exchange.publish(json, routing_key: 'key1')
   end
