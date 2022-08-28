@@ -1,9 +1,15 @@
-ActiveRecord::Schema.define do
-  create_table :users, force: true do |t|
-    t.string :name
-  end
+# frozen_string_literal: true
 
-  create_table :somethings, force: true do |t|
+ActiveRecord::Schema.define do
+  create_table :sporting_events, force: true do |t|
+    t.string :internal_id
     t.string :name
+    t.datetime :event_date
+    t.string :venue
+    t.string :location
+
+    t.integer :version
+    t.string :uuid
+    t.timestamps
   end
 end

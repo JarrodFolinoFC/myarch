@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
+require 'json'
+
 require_relative '../../../lib/ruby/bunny_connection_factory'
 require_relative '../db/connection'
+require_relative '../models/sporting_event'
 
 class SportingEventListener
   def initialize
@@ -10,13 +15,13 @@ class SportingEventListener
   end
 
   def listen
-    q = @channel.queue("test_queue", :auto_delete => true)
+    q = @channel.queue('sporting_event_create', auto_delete: true)
     begin
       q.subscribe(block: true) do |_delivery_info, _properties, body|
-        puts "[x] Consumed message: []"
-        puts body
+        se_list = SportingEvent.from_json(body)
+        se_list.map(&:save!)
       end
-    rescue Interrupt => _
+    rescue Interrupt => _e
       connection.close
       exit(0)
     end

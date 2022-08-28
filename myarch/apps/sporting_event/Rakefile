@@ -1,18 +1,30 @@
+# frozen_string_literal: true
+
 require 'rake'
 require_relative '../../lib/ruby/bunny_connection_factory'
 
 require_relative 'db/connection'
-require_relative 'write/sporting_event_listener'
-require_relative 'write/sporting_event_publisher'
 
 desc 'Run Sporting Event Listener'
 task :run_listener do
+  require_relative 'write/sporting_event_listener'
   SportingEventListener.new.listen
 end
 
 desc 'Publish Sporting Event'
 task :publish do
-  SportingEventPublisher.new.hello
+  require_relative 'write/sporting_event_publisher'
+  SportingEventPublisher.new.send('write/data.csv')
+end
+
+desc 'Sporting Event Summary'
+task :summary do
+  Connection.connect
+  require_relative 'models/sporting_event'
+  puts ''"
+  SportingEvent
+  count #{SportingEvent.count}
+  "''
 end
 
 desc 'Migrate DB'
