@@ -10,6 +10,22 @@ class SportingEvent < ActiveRecord::Base
     %i[internal_id name event_date venue location version uuid]
   end
 
+  # def to_h
+  #   %i[internal_id name event_date venue location version uuid].inject({}) do |hash, key|
+  #     hash[key] = send(key)
+  #   end
+  # end
+
+  # after_create do
+  #   puts self.class.serialized_attrs.join(', ')
+  #   EventPublisher
+  #     .new('test_exchange', 'sporting_event_created', 'key1')
+  #     .send do
+  #     #   to_json
+  #     '{}'
+  #   end
+  # end
+
   def to_s
     "#{self.class} id: #{id}"
   end

@@ -20,13 +20,11 @@ module Serializable
 
   module ClassMethods
     def from_json(json)
-      objects = JSON.parse(json)
-      objects.map do |object|
-        se = new
-        object.keys do |k, v|
-          se.send("#{k}=", v) if se.respond_to?("#{k}=")
-        end
-        se
+      payloads = JSON.parse(json)
+      payloads.map do |payload|
+        object = new
+        payload.keys { |k, v| object.send("#{k}=", v) if object.respond_to?("#{k}=") }
+        object
       end
     end
   end
