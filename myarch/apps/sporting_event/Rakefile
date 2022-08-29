@@ -2,33 +2,48 @@
 
 require 'rake'
 require_relative '../../lib/ruby/bunny_connection_factory'
+require_relative '../../lib/ruby/event_listener'
+require_relative '../../lib/ruby/event_publisher'
 
 require_relative 'db/db_connection'
+require_relative 'models/sporting_event'
+require_relative 'write/csv_reader'
+
+desc 'DB Connect'
+task :db_connect do
+  DbConnection.connect!
+end
 
 desc 'Run Sporting Event Listener'
-task :run_listener do
-  require_relative 'write/sporting_event_listener'
-  SportingEventListener.new.listen
+task run_listener: :db_connect do
+  EventListener.new('sporting_event_create').listen do |payload|
+    SportingEvent.from_json(payload).map(&:save!)
+  end
 end
 
 desc 'Publish Sporting Event'
 task :publish do
-  require_relative 'write/sporting_event_publisher'
-  SportingEventPublisher.new.send('data.csv')
+  EventPublisher
+    .new('test_exchange', 'sporting_event_create', 'key1')
+    .send do
+    CsvReader.parse_csv('data.csv')
+  end
 end
 
 desc 'Sporting Event Summary'
-task :summary do
-  DbConnection.connect!
-  require_relative 'models/sporting_event'
-  puts ''"
+task summary: :db_connect do
+  puts '' "
   SportingEvent
   count #{SportingEvent.count}
-  "''
+  " ''
+end
+
+desc 'Clean Sporting Event'
+task clean: :db_connect do
+  SportingEvent.delete_all
 end
 
 desc 'Migrate DB'
-task :db_migrate do
-  DbConnection.connect!
+task db_migrate: :db_connect do
   require_relative 'db/migrate/migration_one'
 end
