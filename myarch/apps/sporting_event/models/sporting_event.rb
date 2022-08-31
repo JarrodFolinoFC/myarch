@@ -16,6 +16,8 @@ class SportingEvent < ActiveRecord::Base
   end
 
   after_create do
+    binding.pry
+    puts 'after_create'
     self.class.sporting_event_created_instance
       .send do
       self.to_h.to_json
@@ -24,6 +26,7 @@ class SportingEvent < ActiveRecord::Base
 
   def to_h
     {
+      id: self.id,
       internal_id: self.internal_id,
       name: self.name,
       event_date: self.event_date,
