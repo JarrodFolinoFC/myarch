@@ -17,25 +17,35 @@ end
 desc 'Run Create Sporting Event Listener'
 task run_listener: :db_connect do
   EventListener.new('sporting_event_create').listen do |payload|
+    puts 'sporting_event_create'
     SportingEvent.from_json(payload).map(&:save!)
   end
 end
 
 desc 'Run Sporting Event Created Listener'
-task run_listener: :db_connect do
+task run_created_listener: :db_connect do
   EventListener.new('sporting_event_created').listen do |payload|
-    SportingEvent.from_json(payload).each do |se|
-      puts se
-    end
+    puts payload
   end
 end
 
-desc 'Publish Sporting Event'
-task :publish do
+desc 'Publish Single Sporting Event'
+task :publish_all do
   EventPublisher
     .new('test_exchange', 'sporting_event_create', 'key1')
     .send do
     CsvReader.parse_csv('data.csv')
+  end
+end
+
+desc 'Publish Single Sporting Event'
+task :publish, [:internal_id] do |t, args|
+  internal_id = args[:internal_id]
+  data = JSON.parse(CsvReader.parse_csv('data.csv')).select {|obj| obj['internal_id'] == internal_id}.to_json
+  EventPublisher
+    .new('test_exchange', 'sporting_event_create', 'key1')
+    .send do
+    data
   end
 end
 
