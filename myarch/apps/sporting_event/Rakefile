@@ -31,6 +31,7 @@ task summary: 'db:connect' do
   puts '' "
   SportingEvent
   count #{SportingEvent.count}
+  #{SportingEvent.last.inspect}
   " ''
 end
 
@@ -38,7 +39,8 @@ namespace :run do
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
     EventListener.new('sporting_event_create').listen do |payload|
-      SportingEvent.from_json(payload).map(&:save!)
+      sporting_events = SportingEvent.build_all(JSON.parse(payload))
+      sporting_events.map(&:save!)
     end
   end
 

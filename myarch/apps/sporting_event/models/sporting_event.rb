@@ -1,23 +1,9 @@
 # frozen_string_literal: true
 
 require 'json'
-require_relative '../../../lib/ruby/serializable'
 
 class SportingEvent < ActiveRecord::Base
-  include Serializable
-
-  def self.serialized_attrs
-    %i[internal_id name event_date venue location version uuid]
-  end
-
-  def self.sporting_event_created_instance
-    @@sporting_event_created ||=
-      EventPublisher.new('test_exchange', 'sporting_event_created', 'key1')
-  end
-
   after_create do
-    binding.pry
-    puts 'after_create'
     self.class.sporting_event_created_instance
       .send do
       self.to_h.to_json
@@ -38,5 +24,17 @@ class SportingEvent < ActiveRecord::Base
 
   def to_s
     "#{self.class} id: #{id}"
+  end
+
+  def self.sporting_event_created_instance
+    @@sporting_event_created ||=
+      EventPublisher.new('test_exchange', 'sporting_event_created', 'key1')
+  end
+
+  def self.build_all(data)
+    data = [data] unless data.instance_of?(Array)
+    data.map do |props|
+      SportingEvent.new(props)
+    end
   end
 end
