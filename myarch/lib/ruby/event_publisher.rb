@@ -15,6 +15,17 @@ class EventPublisher
   def send
     connect_exchange!(@direct, @queue_name, @routing_key)
     payload = yield
-    exchange.publish(payload, routing_key: 'key1')
+    exchange.publish(payload, routing_key: @routing_key)
+  end
+
+  def send_model(model)
+    connect_exchange!(@direct, @queue_name, @routing_key)
+    exchange.publish(model.attributes.to_json, routing_key: @routing_key)
+  end
+
+  def self.fetch_instance(queue_name)
+    direct = ENV['RABBIT_EXCHANGE_NAME'] || 'myexchange'
+    routing_key = ENV['RABBIT_ROUTING_KEY'] || 'mykey'
+    @instance ||= EventPublisher.new(direct, queue_name, routing_key)
   end
 end
