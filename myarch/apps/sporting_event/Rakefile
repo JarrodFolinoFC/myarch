@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rake'
-require_relative '../../lib/ruby/bunny_connection_factory'
-require_relative '../../lib/ruby/event_listener'
-require_relative '../../lib/ruby/event_publisher'
-require_relative '../../lib/ruby/queue_manager'
-require_relative '../../lib/ruby/active_model_helper'
+require_relative '../../lib/ruby/bunny/bunny_connection_factory'
+require_relative '../../lib/ruby/bunny/event_listener'
+require_relative '../../lib/ruby/bunny/event_publisher'
+require_relative '../../lib/ruby/bunny/queue_manager'
+require_relative '../../lib/ruby/active_model/active_model_helper'
 
 require_relative 'db/db_connection'
 require_relative 'models/sporting_event'
@@ -39,6 +39,11 @@ task summary: 'db:connect' do
 end
 
 namespace :run do
+  desc 'Run Sporting Event REST Server'
+  task :server do
+    ruby "#{__dir__}/api/rest_server.rb"
+  end
+
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
     EventListener.new('sporting_event_create').listen do |payload|

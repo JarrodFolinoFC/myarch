@@ -2,7 +2,7 @@
 
 require 'bundler/setup'
 require 'bunny'
-require_relative 'app_shared_config'
+require_relative '../config/app_shared_config'
 
 class BunnyConnectionFactor
   def self.get_bunny

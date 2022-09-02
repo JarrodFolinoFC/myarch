@@ -10,6 +10,6 @@ class QueueManager
   def purge_all(queues)
     queues.each {|queue| channel.queue_purge(queue)}
   rescue Bunny::NotFound
-    
+
   end
 end
