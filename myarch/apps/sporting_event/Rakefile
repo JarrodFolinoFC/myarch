@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'rake'
-require_relative '../../lib/ruby/bunny/bunny_connection_factory'
-require_relative '../../lib/ruby/bunny/event_listener'
-require_relative '../../lib/ruby/bunny/event_publisher'
-require_relative '../../lib/ruby/bunny/queue_manager'
-require_relative '../../lib/ruby/active_model/active_model_helper'
+require_relative '../../libs/ruby/bunny/bunny_connection_factory'
+require_relative '../../libs/ruby/bunny/event_listener'
+require_relative '../../libs/ruby/bunny/event_publisher'
+require_relative '../../libs/ruby/bunny/queue_manager'
+require_relative '../../libs/ruby/active_model/active_model_helper'
 
 require_relative 'db/db_connection'
 require_relative 'models/sporting_event'
@@ -13,7 +13,7 @@ require_relative 'lib/csv_reader'
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do
-  QueueManager.new.purge_all(%w[sporting_event_created sporting_event_created])
+  Heart::Core::QueueManager.new.purge_all(%w[sporting_event_created sporting_event_created])
   SportingEvent.delete_all
 end
 
@@ -46,26 +46,26 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
-    EventListener.new('sporting_event_create').listen do |payload|
-      sporting_events = ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
+    Heart::Core::EventListener.new('sporting_event_create').listen do |payload|
+      sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
     end
   end
 
   desc 'Run Sporting Event Created Listener'
   task created_listener: 'db:connect' do
-    EventListener.new('sporting_event_created').listen { |payload| puts payload }
+    Heart::Core::EventListener.new('sporting_event_created').listen { |payload| puts payload }
   end
 end
 
 desc 'Publish Single Sporting Event'
 task :publish_all do
-  EventPublisher.fetch_instance('sporting_event_create').send { CsvReader.parse_csv('data.csv') }
+  Heart::Core::EventPublisher.fetch_instance('sporting_event_create').send { CsvReader.parse_csv('data.csv') }
 end
 
 desc 'Publish Single Sporting Event'
 task :publish, [:internal_id] do |t, args|
   internal_id = args[:internal_id]
   data = JSON.parse(CsvReader.parse_csv('data.csv')).select { |obj| obj['internal_id'] == internal_id }.to_json
-  EventPublisher.fetch_instance('sporting_event_create').send { data }
+  Heart::Core::EventPublisher.fetch_instance('sporting_event_create').send { data }
 end
