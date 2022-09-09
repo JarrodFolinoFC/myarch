@@ -6,6 +6,7 @@ require_relative '../../libs/ruby/bunny/event_listener'
 require_relative '../../libs/ruby/bunny/event_publisher'
 require_relative '../../libs/ruby/bunny/queue_manager'
 require_relative '../../libs/ruby/active_model/active_model_helper'
+require_relative '../../libs/ruby/discovery/registry'
 
 require_relative 'db/db_connection'
 require_relative 'models/sporting_event'
@@ -32,9 +33,13 @@ end
 desc 'Sporting Event Summary'
 task summary: 'db:connect' do
   puts '' "
+  Discovery Summary
+  #{Heart::Core::Discovery::Registry.new.summary('app/')}
+  " ''
+
+  puts '' "
   SportingEvent
   count #{SportingEvent.count}
-  #{SportingEvent.last&.attributes}
   " ''
 end
 

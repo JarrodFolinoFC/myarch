@@ -6,6 +6,15 @@ module Heart
     class EventPublisher
       include Messageable
 
+      DEFAULTS = {
+        persistent: true,
+        delivery_mode: '',
+        content_type: 'None',
+        priority: 0
+      }.freeze
+
+
+
       def initialize(direct, queue_name, routing_key)
         @direct = direct
         @queue_name = queue_name
@@ -24,8 +33,8 @@ module Heart
         exchange.publish(model.attributes.to_json, routing_key: @routing_key)
       end
 
-      def self.fetch_instance(queue_name)
-        direct = ENV['RABBIT_EXCHANGE_NAME'] || 'myexchange'
+      def self.fetch_instance(queue_name, overrides = {})
+        direct = ENV['RABBIT_EXCHANGE_NAME'] || '' # Default
         routing_key = ENV['RABBIT_ROUTING_KEY'] || 'mykey'
         @instance ||= EventPublisher.new(direct, queue_name, routing_key)
       end

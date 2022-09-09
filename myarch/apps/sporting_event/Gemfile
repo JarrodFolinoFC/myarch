@@ -2,8 +2,8 @@
 
 source 'https://rubygems.org'
 
+gem 'heart_core'
 gem 'activerecord'
-gem 'bunny'
 gem 'pg'
 gem 'rubocop'
 gem 'sinatra'

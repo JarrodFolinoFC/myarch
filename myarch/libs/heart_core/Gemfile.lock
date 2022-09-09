@@ -1,0 +1,27 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    amq-protocol (2.3.2)
+    bunny (2.19.0)
+      amq-protocol (~> 2.3, >= 2.3.1)
+      sorted_set (~> 1, >= 1.0.2)
+    connection_pool (2.2.5)
+    rbtree (0.4.5)
+    redis (5.0.3)
+      redis-client (>= 0.7.4)
+    redis-client (0.8.0)
+      connection_pool
+    set (1.0.3)
+    sorted_set (1.0.3)
+      rbtree
+      set (~> 1.0)
+
+PLATFORMS
+  arm64-darwin-21
+
+DEPENDENCIES
+  bunny
+  redis
+
+BUNDLED WITH
+   2.3.20
