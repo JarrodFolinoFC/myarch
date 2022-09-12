@@ -4,6 +4,6 @@ require 'json'
 
 class SportingEvent < ActiveRecord::Base
   after_create do
-    Heart::Core::EventPublisher.fetch_instance('sporting_event_created').send_model(self)
+    Heart::Core::EventPublisher.fetch_instance('sporting_event_created').publish_model(self)
   end
 end
