@@ -8,7 +8,7 @@ module Heart
       DEFAULT_HEADERS = {}
 
       def initialize(direct, queue_name, routing_key)
-        @direct = direct
+        @name = direct
         @queue_name = queue_name
         @routing_key = routing_key
       end

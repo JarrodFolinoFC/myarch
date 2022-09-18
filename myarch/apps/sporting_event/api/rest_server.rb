@@ -5,7 +5,7 @@ require_relative '../models/sporting_event'
 require_relative '../../../libs/ruby/discovery/registry'
 
 
-DbConnection.connect!
+Heart::Core::DbConnection.connect!
 Heart::Core::Discovery::Registry.new.set('app/sporting_event_rest_server', "http://localhost:4567")
 
 get '/sporting_events' do

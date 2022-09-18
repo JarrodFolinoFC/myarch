@@ -15,6 +15,10 @@ module Heart
         @config
       end
 
+      def [](key)
+        @config[key]
+      end
+
       def set_config(key, &block)
         return if @config.has_key?(key)
         @configuration_dsl = ConfigurationDSL.new

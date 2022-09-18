@@ -7,8 +7,12 @@ module Heart
         @config = {}
       end
 
-      def method_missing(method_name, *args)
-        @config[method_name] = args.first
+      def method_missing(method_name, *args, &block)
+        @config[method_name] = if block_given?
+          Proc.new { |*args| block.call(*args) }
+        else
+          args.first
+        end
       end
     end
   end

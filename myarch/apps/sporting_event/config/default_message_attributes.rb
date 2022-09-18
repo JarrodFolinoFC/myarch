@@ -1,4 +1,19 @@
-Heart::Core::Config.instance.set_config('default_message_attributes') do
-  name 'app-name'
-  version '0.0.1'
+require 'securerandom'
+
+Heart::Core::Config.instance.set_config('default/rabbit/attributes') do
+  direct_name 'direct_one'
+  routing_key 'routing_key_one'
+  persistent false
+  mandatory false
+  # timestamp { Time.now }
+  # expiration { Time.now }
+  type 'type'
+  reply_to ''
+  content_type 'application/json'
+  content_encoding ''
+  priority 9
+  message_id { SecureRandom.hex }
+  correlation_id { SecureRandom.hex }
+  user_id 123
+  app_id { Heart::Core::Config.instance['app']['app-name'] }
 end

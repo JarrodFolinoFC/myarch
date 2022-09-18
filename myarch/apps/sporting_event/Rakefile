@@ -3,9 +3,11 @@
 require 'rake'
 require '../../libs/heart_core/lib/heart_core'
 
-require_relative 'db/db_connection'
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
+require_relative 'config/about'
+require_relative 'config/db'
+require_relative 'config/default_message_attributes'
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do
@@ -16,7 +18,8 @@ end
 namespace :db do
   desc 'DB Connect'
   task :connect do
-    DbConnection.connect!
+    require_relative 'config/db'
+    Heart::Core::DbConnection.connect!
   end
 
   desc 'Migrate DB'
@@ -70,7 +73,7 @@ end
 
 desc 'Publish Single Sporting Event'
 task :publish_all, [:publisher_class] => 'db:connect' do |t, args|
-  args.with_defaults(publisher_class: 'Heart::Core::EventPublisher')
+  args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
   publisher_class = Object.const_get(args[:publisher_class])
   publisher_class.fetch_instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
 end
