@@ -55,12 +55,9 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
-    puts 'listening...'
     Heart::Core::EventListener.new('sporting_event_create').listen do |payload|
-      puts 'payload received'
       sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
-      puts 'payload processed'
     end
   end
 

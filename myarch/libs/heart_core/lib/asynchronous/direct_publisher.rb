@@ -16,24 +16,14 @@ module Heart
       end
 
       def publish
-        evaluated_hash = evaluate_hash
+        evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
         connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
         payload = yield
-        puts evaluated_hash
-        puts payload.size
         exchange.publish(payload, evaluated_hash)
       end
 
-      def evaluate_hash
-        new_map = {}
-        @settings.map do |k, v|
-          new_map[k] = v.instance_of?(Proc) ? v.call : v
-        end
-        new_map
-      end
-
       def publish_model(model)
-        evaluated_hash = evaluate_hash
+        evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
         connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
         exchange.publish(model.attributes.to_json,
                          evaluated_hash)

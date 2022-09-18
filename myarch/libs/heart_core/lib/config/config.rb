@@ -7,6 +7,14 @@ module Heart
         @instance ||= Heart::Core::Config.new
       end
 
+      def self.evaluate_hash(hash)
+        new_map = {}
+        hash.map do |k, v|
+          new_map[k] = v.instance_of?(Proc) ? v.call : v
+        end
+        new_map
+      end
+
       def initialize
         @config = {}
       end

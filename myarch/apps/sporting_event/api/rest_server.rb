@@ -1,8 +1,9 @@
 require 'sinatra'
 
-require_relative '../db/db_connection'
+require 'active_record'
+require_relative '../../../libs/heart_core/lib/heart_core'
+require_relative '../config/db'
 require_relative '../models/sporting_event'
-require_relative '../../../libs/ruby/discovery/registry'
 
 
 Heart::Core::DbConnection.connect!
