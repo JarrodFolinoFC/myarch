@@ -13,6 +13,7 @@ desc 'Clean Sporting Event'
 task clean: 'db:connect' do
   Heart::Core::QueueManager.new.purge_all(%w[sporting_event_created sporting_event_created])
   SportingEvent.delete_all
+  Heart::Core::OutboxMessage.delete_all
 end
 
 namespace :db do
@@ -54,9 +55,12 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
+    puts 'listening...'
     Heart::Core::EventListener.new('sporting_event_create').listen do |payload|
+      puts 'payload received'
       sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
+      puts 'payload processed'
     end
   end
 
@@ -80,7 +84,7 @@ end
 
 desc 'Publish Single Sporting Event'
 task :publish, [:internal_id] do |t, args|
-  args.with_defaults(publisher_class: 'Heart::Core::EventPublisher')
+  args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
   internal_id = args[:internal_id]
   publisher_class = Object.const_get(args[:publisher_class])
   data = JSON.parse(CsvReader.parse_csv('data.csv')).select { |obj| obj['internal_id'] == internal_id }.to_json

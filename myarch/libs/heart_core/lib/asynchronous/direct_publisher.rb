@@ -19,26 +19,17 @@ module Heart
         evaluated_hash = evaluate_hash
         connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
         payload = yield
+        puts evaluated_hash
+        puts payload.size
         exchange.publish(payload, evaluated_hash)
       end
 
       def evaluate_hash
-        {
-          app_id: @settings[:app_id],
-          # user_id: @settings[:user_id],
-          routing_key: @settings[:routing_key],
-          persistent: @settings[:persistent],
-          mandatory: @settings[:mandatory],
-          type: @settings[:type],
-          reply_to: @settings[:reply_to],
-          content_type: @settings[:content_type],
-          content_encoding: @settings[:content_encoding],
-          priority: @settings[:priority],
-          # timestamp: @settings[:timestamp].call,
-          # expiration: @settings[:expiration].call,
-          message_id: @settings[:message_id].call,
-          correlation_id: @settings[:correlation_id].call
-        }
+        new_map = {}
+        @settings.map do |k, v|
+          new_map[k] = v.instance_of?(Proc) ? v.call : v
+        end
+        new_map
       end
 
       def publish_model(model)
