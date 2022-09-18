@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 
 Heart::Core::Config.instance.set_config('default/rabbit/attributes') do

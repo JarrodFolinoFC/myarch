@@ -3,9 +3,9 @@
 source 'https://rubygems.org'
 
 gem 'activerecord'
-gem 'pg'
-gem 'rubocop'
 gem 'avro_turf'
-gem 'sinatra'
 gem 'bunny'
+gem 'pg'
 gem 'redis'
+gem 'rubocop'
+gem 'sinatra'

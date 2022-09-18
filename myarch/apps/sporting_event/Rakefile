@@ -73,14 +73,14 @@ namespace :run do
 end
 
 desc 'Publish Single Sporting Event'
-task :publish_all, [:publisher_class] => 'db:connect' do |t, args|
+task :publish_all, [:publisher_class] => 'db:connect' do |_t, args|
   args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
   publisher_class = Object.const_get(args[:publisher_class])
   publisher_class.fetch_instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
 end
 
 desc 'Publish Single Sporting Event'
-task :publish, [:internal_id] do |t, args|
+task :publish, [:internal_id] do |_t, args|
   args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
   internal_id = args[:internal_id]
   publisher_class = Object.const_get(args[:publisher_class])

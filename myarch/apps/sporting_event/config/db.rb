@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Heart::Core::Config.instance.set_config('database') do
   adapter 'postgresql'
   host 'tyke.db.elephantsql.com'
