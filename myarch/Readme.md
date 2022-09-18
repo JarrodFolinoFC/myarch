@@ -1,9 +1,8 @@
 # HC todos
-* add logging
-* Listener fetch config
 * listener/publisher queue config
+* Listener fetch config
+* add logging
 * listener DB inbox
-* auto response listener
 * listener publish to auto response listener
 * make publishers a gem
 * move global rabbit config to IOC

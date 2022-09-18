@@ -5,10 +5,10 @@ require '../../libs/heart_core/lib/heart_core'
 
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
-require_relative 'config/about'
-require_relative 'config/db'
-require_relative 'config/default_message_attributes'
-require_relative 'config/reply_to_attributes'
+
+%w[about db default_message_attributes default_listener_attributes reply_to_attributes].each do |file|
+  require_relative "config/#{file}"
+end
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do
@@ -56,7 +56,7 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
-    Heart::Core::EventListener.new('sporting_event_create', send_confirmation: true).listen do |payload|
+    Heart::Core::EventListener.instance('sporting_event_create', send_confirmation: true, ).listen do |payload|
       sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
     end
@@ -64,7 +64,7 @@ namespace :run do
 
   desc 'Run Sporting Event Created Listener'
   task created_listener: 'db:connect' do
-    Heart::Core::EventListener.new('sporting_event_created').listen { |payload| puts payload }
+    Heart::Core::EventListener.instance('sporting_event_created').listen { |payload| puts payload }
   end
 
   desc 'Run Polling Publisher'
@@ -92,7 +92,7 @@ end
 desc 'Run Reply Listener'
 task :reply_listener do
   reply_topic = Heart::Core::Config.instance['default/rabbit/publish_attributes'][:reply_to]
-  Heart::Core::EventListener.new('reply_queue').listen do |payload|
+  Heart::Core::EventListener.instance('reply_queue').listen do |payload|
     puts payload
   end
 end
