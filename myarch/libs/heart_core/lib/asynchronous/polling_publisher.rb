@@ -7,7 +7,7 @@ module Heart
       def run
         while true do
           OutboxMessage.where(sent_at: nil).each do |msg|
-            DirectPublisher.fetch_instance(msg.queue).publish do
+            DirectPublisher.instance(msg.queue).publish do
               msq.payload
             end
             msg.update(sent_at: Time.now)

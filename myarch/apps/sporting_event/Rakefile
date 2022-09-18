@@ -8,6 +8,7 @@ require_relative 'lib/csv_reader'
 require_relative 'config/about'
 require_relative 'config/db'
 require_relative 'config/default_message_attributes'
+require_relative 'config/reply_to_attributes'
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do
@@ -55,7 +56,7 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
-    Heart::Core::EventListener.new('sporting_event_create').listen do |payload|
+    Heart::Core::EventListener.new('sporting_event_create', send_confirmation: true).listen do |payload|
       sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
     end
@@ -72,11 +73,11 @@ namespace :run do
   end
 end
 
-desc 'Publish Single Sporting Event'
+desc 'Publish All Sporting Events'
 task :publish_all, [:publisher_class] => 'db:connect' do |_t, args|
   args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
   publisher_class = Object.const_get(args[:publisher_class])
-  publisher_class.fetch_instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
+  publisher_class.instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
 end
 
 desc 'Publish Single Sporting Event'
@@ -85,5 +86,13 @@ task :publish, [:internal_id] do |_t, args|
   internal_id = args[:internal_id]
   publisher_class = Object.const_get(args[:publisher_class])
   data = JSON.parse(CsvReader.parse_csv('data.csv')).select { |obj| obj['internal_id'] == internal_id }.to_json
-  publisher_class.fetch_instance('sporting_event_create').publish { data }
+  publisher_class.instance('sporting_event_create').publish { data }
+end
+
+desc 'Run Reply Listener'
+task :reply_listener do
+  reply_topic = Heart::Core::Config.instance['default/rabbit/publish_attributes'][:reply_to]
+  Heart::Core::EventListener.new('reply_queue').listen do |payload|
+    puts payload
+  end
 end

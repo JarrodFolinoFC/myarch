@@ -1,9 +1,20 @@
+# HC todos
+* add logging
+* Listener fetch config
+* listener/publisher queue config
+* listener DB inbox
+* auto response listener
+* listener publish to auto response listener
+* make publishers a gem
+* move global rabbit config to IOC
+
+What is IPC? Inter process communication
+What is sem var? Maj.Min.Patch
+
 What is a partition in kafka
 What is AMQP or STOMP
 What is Avro or Protocol Buffers
-What is IPC? Inter process communication
 What is the robustness principle?
-What is sem var?
 What are the differences between RPI and HTTP?
 What is the REST maturity model?
 What is GraphQL and Falcor?

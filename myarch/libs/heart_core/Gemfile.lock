@@ -5,7 +5,12 @@ GEM
     bunny (2.19.0)
       amq-protocol (~> 2.3, >= 2.3.1)
       sorted_set (~> 1, >= 1.0.2)
+    coderay (1.1.3)
     connection_pool (2.2.5)
+    method_source (1.0.0)
+    pry (0.14.1)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
     rbtree (0.4.5)
     redis (5.0.3)
       redis-client (>= 0.7.4)
@@ -18,10 +23,12 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-darwin-21
 
 DEPENDENCIES
   bunny
+  pry
   redis
 
 BUNDLED WITH
-   2.3.20
+   2.3.22
