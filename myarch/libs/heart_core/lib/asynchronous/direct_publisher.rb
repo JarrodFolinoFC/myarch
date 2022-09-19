@@ -9,29 +9,31 @@ module Heart
     class DirectPublisher
       include Messageable
 
+      attr_reader :name, :queue_name, :settings
+
       def initialize(queue_name, settings = {})
         @name = settings[:direct_name] || 'direct_name'
         @queue_name = queue_name
         @settings = settings
-        msg_connect!
+        create_channel
       end
 
       def publish()
         evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
-        connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
+        create_exchange(@name, @queue_name, evaluated_hash[:routing_key])
         payload = yield
         exchange.publish(payload, evaluated_hash)
       end
 
       def publish_with_settings(settings)
-        connect_exchange!(settings['direct_name'], @queue_name, settings['routing_key'])
+        create_exchange(settings['direct_name'], @queue_name, settings['routing_key'])
         payload = yield
         exchange.publish(payload, settings)
       end
 
       def publish_model(model)
         evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
-        connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
+        create_exchange(@name, @queue_name, evaluated_hash[:routing_key])
         exchange.publish(model.attributes.to_json,
                          evaluated_hash)
       end

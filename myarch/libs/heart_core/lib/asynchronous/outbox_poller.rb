@@ -5,7 +5,7 @@ require 'json'
 
 module Heart
   module Core
-    class PollingPublisher
+    class OutboxPoller
 
       def run
         while true do

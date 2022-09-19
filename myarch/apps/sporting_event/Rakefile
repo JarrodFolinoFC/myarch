@@ -71,8 +71,8 @@ namespace :run do
   end
 
   desc 'Run Polling Publisher'
-  task polling_publisher: 'db:connect' do
-    Heart::Core::PollingPublisher.new.run
+  task outbox_poller: 'db:connect' do
+    Heart::Core::OutboxPoller.new.run
   end
 end
 

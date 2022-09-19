@@ -5,7 +5,7 @@ module Heart
       include Messageable
 
       def initialize
-        msg_connect!
+        create_channel
       end
 
       def purge_all(queues)

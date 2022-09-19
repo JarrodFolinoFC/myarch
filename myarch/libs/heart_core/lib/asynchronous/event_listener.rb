@@ -15,7 +15,7 @@ module Heart
       end
 
       def listen
-        msg_connect!
+        create_channel
         q = channel.queue(@queue, auto_delete: @settings[:auto_delete])
         begin
           q.subscribe(block: @settings[:block]) do |_delivery_info, properties, body|
