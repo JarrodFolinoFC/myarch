@@ -13,8 +13,10 @@ config/app_config
 config/app_shared_config
 config/config
 config/configuration_dsl
+config/defaults
 discovery/registry
 abstractions/db_connection
+abstractions/logger
 ].each do |lib|
   require_relative lib
 end
