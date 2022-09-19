@@ -16,11 +16,17 @@ module Heart
         msg_connect!
       end
 
-      def publish(arg = nil)
+      def publish()
         evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
         connect_exchange!(@name, @queue_name, evaluated_hash[:routing_key])
         payload = yield
         exchange.publish(payload, evaluated_hash)
+      end
+
+      def publish_with_settings(settings)
+        connect_exchange!(settings['direct_name'], @queue_name, settings['routing_key'])
+        payload = yield
+        exchange.publish(payload, settings)
       end
 
       def publish_model(model)

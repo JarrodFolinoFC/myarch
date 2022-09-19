@@ -4,38 +4,36 @@ require_relative '../active_record/outbox_message'
 module Heart
   module Core
     class OutboxPublisher
-      DEFAULT_MODEL_CLASS = ''
-      DEFAULT_HEADERS = {}
-
-      def initialize(direct, queue_name, routing_key)
-        @name = direct
+      def initialize(queue_name, settings)
         @queue_name = queue_name
-        @routing_key = routing_key
+        @name = settings[:direct]
+        @routing_key = settings[:routing_key]
+        @settings = settings
       end
 
       def publish
         payload = yield
-        do_publish(payload)
+        create_outbox_record(payload)
       end
 
       def publish_model(model)
-        do_publish(model.attributes)
+        create_outbox_record(model.attributes)
       end
 
-      def self.fetch_instance(queue_name, overrides = {})
-        direct = ENV['RABBIT_EXCHANGE_NAME'] || '' # Default
-        routing_key = ENV['RABBIT_ROUTING_KEY'] || 'mykey'
-        @instance ||= OutboxPublisher.new(direct, queue_name, routing_key)
+      def self.instance(queue_name, config_lookup = nil)
+        config = Heart::Core::Config.instance[config_lookup || 'default/rabbit/publish_attributes']
+        @instances = {} if @instances.nil?
+        @instances[queue_name] ||= OutboxPublisher.new(queue_name, config)
       end
 
       private
 
-      def do_publish(payload)
+      def create_outbox_record(payload)
+        evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
         Heart::Core::OutboxMessage.create!(
           queue: @queue_name,
-          payload: payload,
-          headers: DEFAULT_HEADERS,
-          sent_at: Time.now
+          payload: payload.to_json,
+          headers: evaluated_hash.to_json
         )
       end
     end

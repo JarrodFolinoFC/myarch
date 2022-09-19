@@ -6,7 +6,7 @@ require '../../libs/heart_core/lib/heart_core'
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
 
-%w[about db default_message_attributes default_listener_attributes reply_to_attributes].each do |file|
+%w[about db default_publish_attributes default_listener_attributes reply_to_attributes].each do |file|
   require_relative "config/#{file}"
 end
 
@@ -45,6 +45,9 @@ task summary: 'db:connect' do
   Heart::Core::OutboxMessage
   sent count #{Heart::Core::OutboxMessage.where.not(sent_at: nil).count}
   unsent count #{Heart::Core::OutboxMessage.where(sent_at: nil).count}
+
+  Last Unsent Headers
+  #{Heart::Core::OutboxMessage.where(sent_at: nil).last.headers}
   " ''
 end
 
@@ -94,5 +97,14 @@ task :reply_listener do
   reply_topic = Heart::Core::Config.instance['default/rabbit/publish_attributes'][:reply_to]
   Heart::Core::EventListener.instance('reply_queue').listen do |payload|
     puts payload
+  end
+end
+
+desc 'Run DB Reply Listener'
+task :db_reply_listener do
+  Heart::Core::EventListener.instance('reply_queue').listen do |payload|
+    Heart::Core::OutboxMessage.ack!(payload[:correlation_id],
+                                    payload[:application_name],
+                                    payload[:message])
   end
 end

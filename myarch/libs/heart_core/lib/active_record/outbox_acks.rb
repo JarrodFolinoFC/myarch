@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+require 'active_record'
 
 module Heart
   module Core
-    class OutboxMessage < ActiveRecord::Base
+    class OutboxAck < ActiveRecord::Base
+
     end
   end
 end

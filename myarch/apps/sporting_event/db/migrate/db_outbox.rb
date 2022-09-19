@@ -14,6 +14,7 @@ ActiveRecord::Schema.define do
   create_table :outbox_acks, force: true do |t|
     t.belongs_to :outbox_message
     t.string :application_name
+    t.binary :message
     t.timestamps
   end
 end

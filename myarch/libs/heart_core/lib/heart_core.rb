@@ -1,5 +1,6 @@
 %w[
 active_record/active_model_helper
+active_record/outbox_acks
 active_record/outbox_message
 asynchronous/bunny_connection_factory
 asynchronous/event_listener

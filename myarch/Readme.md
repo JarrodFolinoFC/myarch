@@ -4,8 +4,10 @@
 * add logging
 * listener DB inbox
 * listener publish to auto response listener
-* make publishers a gem
+* reconciler
 * move global rabbit config to IOC
+* make publishers a gem
+* github actions
 
 What is IPC? Inter process communication
 What is sem var? Maj.Min.Patch
