@@ -6,7 +6,7 @@ ActiveRecord::Schema.define do
     t.string :queue
     t.binary :payload
     t.binary :headers
-    t.datetime :sent_at
+    t.datetime :last_published_at
 
     t.timestamps
   end

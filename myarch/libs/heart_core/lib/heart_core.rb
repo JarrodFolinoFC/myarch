@@ -4,10 +4,10 @@ active_record/outbox_acks
 active_record/outbox_message
 asynchronous/event_listener
 asynchronous/direct_publisher
+asynchronous/outbox_publisher
 asynchronous/messageable
 asynchronous/queue_manager
-asynchronous/outbox_publisher
-asynchronous/outbox_publisher
+asynchronous/outbox_poller
 config/app_config
 config/app_shared_config
 config/config
@@ -15,6 +15,7 @@ config/configuration_dsl
 config/defaults
 discovery/registry
 abstractions/bunny_connection_factory
+abstractions/bunny_connection_factory2
 abstractions/db_connection
 abstractions/logger
 ].each do |lib|

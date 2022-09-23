@@ -1,12 +1,39 @@
 # HC todos
-* add logging
+* regression test
 * listener DB inbox
 * listener publish to auto response listener
+* grape swagger
+  * strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html
+* publish with settings
+```json
+  {
+   "direct_name" : "direct_one",
+   "routing_key": "routing_key_one",
+   "persistent" : true,
+    "mandatory":true,
+  "type":"type",
+  "reply_to": "reply_queue",
+  "content_type": "application/json",
+  "content_encoding":,
+  "priority":1, 
+  "message_id": "d7c6718f93b76fe525ee99f5fc7717a0", 
+  "correlation_id": "54fecb335af52b7b20b8910a6f1f3edf",
+  "app_id": null}
+```
 
-* reconciler
-* move global rabbit config to IOC
+* after_send_confirmation
 * make publishers a gem
 * github actions
+* specs
+* code generators https://github.com/rails/thor/wiki 
+
+Concepts:
+* Isometric::Reconcile
+* Isometric::Fetch
+  * HTTP Fetch
+    * ETag cache
+* Isometric::Publish
+* Isometric::Listen
 
 What is IPC? Inter process communication
 What is sem var? Maj.Min.Patch

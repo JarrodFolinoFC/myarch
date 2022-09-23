@@ -6,13 +6,13 @@ require '../../libs/heart_core/lib/heart_core'
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
 
-%w[about db default_publish_attributes default_listener_attributes reply_to_attributes].each do |file|
+%w[about db default_publish_attributes default_listener_attributes reply_to_attributes bunny].each do |file|
   require_relative "config/#{file}"
 end
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do
-  Heart::Core::QueueManager.new.purge_all(%w[sporting_event_created sporting_event_created])
+  Heart::Core::QueueManager.new.purge_all(%w[sporting_event sporting_event_created sporting_event_created])
   SportingEvent.delete_all
   Heart::Core::OutboxMessage.delete_all
 end
@@ -43,11 +43,11 @@ task summary: 'db:connect' do
   count #{SportingEvent.count}
 
   Heart::Core::OutboxMessage
-  sent count #{Heart::Core::OutboxMessage.where.not(sent_at: nil).count}
-  unsent count #{Heart::Core::OutboxMessage.where(sent_at: nil).count}
+  sent count #{Heart::Core::OutboxMessage.where.not(last_published_at: nil).count}
+  unsent count #{Heart::Core::OutboxMessage.where(last_published_at: nil).count}
 
   Last Unsent Headers
-  #{Heart::Core::OutboxMessage.where(sent_at: nil).last.headers}
+  #{Heart::Core::OutboxMessage.where(last_published_at: nil).last&.headers}
   " ''
 end
 
@@ -59,9 +59,10 @@ namespace :run do
 
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
-    Heart::Core::EventListener.instance('sporting_event_create', send_confirmation: true, ).listen do |payload|
+    Heart::Core::EventListener.instance('sporting_event_create').listen do |payload|
       sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
       sporting_events.map(&:save!)
+      Heart::Core::Logger.instance.debug("#{sporting_events.size} SportingEvent objects created")
     end
   end
 
@@ -83,6 +84,15 @@ task :publish_all, [:publisher_class] => 'db:connect' do |_t, args|
   publisher_class.instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
 end
 
+desc 'Publish All Sporting Events'
+task :publish_test => 'db:connect' do
+  settings = Heart::Core::Config.instance['default/rabbit/publish_attributes']
+  settings = Heart::Core::Config.evaluate_hash(settings)
+  Heart::Core::DirectPublisher.instance('sporting_event_create').publish_with_settings(settings) {
+    CsvReader.parse_csv('data.csv')
+  }
+end
+
 desc 'Publish Single Sporting Event'
 task :publish, [:internal_id] do |_t, args|
   args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
@@ -102,9 +112,16 @@ end
 
 desc 'Run DB Reply Listener'
 task :db_reply_listener do
-  Heart::Core::EventListener.instance('reply_queue').listen do |payload|
+  Heart::Core::EventListener.instance('reply_to').listen do |payload|
     Heart::Core::OutboxMessage.ack!(payload[:correlation_id],
                                     payload[:application_name],
                                     payload[:message])
+  end
+end
+
+task :bunny_test do
+  Heart::Core::EventListener.instance('sporting_event').listen do |payload|
+    sporting_events = Heart::Core::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
+    sporting_events.map(&:save!)
   end
 end

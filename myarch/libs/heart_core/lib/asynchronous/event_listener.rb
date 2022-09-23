@@ -2,34 +2,30 @@
 
 require 'json'
 
-require_relative 'messageable'
 module Heart
   module Core
     class EventListener
-      include Messageable
-
-      def initialize(queue, send_confirmation: false, settings: nil)
+      def initialize(queue, conn, send_confirmation: false, settings: nil)
         @queue = queue
-        @settings = settings
-        @send_confirmation = send_confirmation
+        @conn = conn
+      #   @settings = settings
+      #   @send_confirmation = send_confirmation
       end
 
       def listen
-        create_channel
-        q = channel.queue(@queue, auto_delete: @settings[:auto_delete])
-        begin
-          q.subscribe(block: @settings[:block]) do |_delivery_info, properties, body|
-            yield(body)
-            after_send_confirmation(_delivery_info, properties, body) if @send_confirmation
-          end
-        rescue Interrupt => _e
-          conn.close
-          exit(0)
+        @conn.start
+        ch = @conn.create_channel
+        q = ch.queue(@queue, auto_delete: true)
+        Heart::Core::Logger.instance.info("#{self.class} started on queue: #@queue")
+        q.subscribe(block: true) do |delivery_info, metadata, payload|
+          yield(payload)
+          Heart::Core::Logger.instance.info("Message Processed")
+
         end
       end
 
       def after_send_confirmation(_delivery_info, properties, _body)
-        DirectPublisher.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').publish do
+        DirectPublisher.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').connect_exchange.publish do
           {
             correlation_id: properties[:correlation_id],
             application_name: 'App Name',
@@ -38,10 +34,11 @@ module Heart
         end
       end
 
-      def self.instance(queue_name, send_confirmation: false, config_lookup: nil)
-        settings = Heart::Core::Config.instance[config_lookup || 'default/rabbit/listener_attributes']
+      def self.instance(queue_name)
+        # settings = Heart::Core::Config.instance[config_lookup || 'default/rabbit/listener_attributes']
         @instances = {} if @instances.nil?
-        @instances[queue_name] ||= EventListener.new(queue_name, send_confirmation: send_confirmation, settings: settings)
+        conn = BunnyConnectionFactory2.conn
+        @instances[queue_name] ||= EventListener.new(queue_name, conn)
       end
     end
   end

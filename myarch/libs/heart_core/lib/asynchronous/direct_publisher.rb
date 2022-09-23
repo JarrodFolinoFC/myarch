@@ -3,30 +3,36 @@
 require 'json'
 require_relative 'messageable'
 require_relative '../config/config'
+require 'pry'
 
 module Heart
   module Core
     class DirectPublisher
       include Messageable
 
-      attr_reader :name, :queue_name, :settings
+      attr_reader :exchange_name, :queue_name, :settings
 
       def initialize(queue_name, settings = {})
-        @name = settings[:direct_name] || 'direct_name'
+        @exchange_name = settings[:direct_name] || 'direct_name'
         @queue_name = queue_name
         @settings = settings
         create_channel
       end
 
-      def publish()
+      def connect_exchange
         evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
-        create_exchange(@name, @queue_name, evaluated_hash[:routing_key])
+        create_exchange(@exchange_name, @queue_name, evaluated_hash[:routing_key])
+        self
+      end
+
+      def publish
+        evaluated_hash = Heart::Core::Config.evaluate_hash(@settings)
         payload = yield
         exchange.publish(payload, evaluated_hash)
       end
 
       def publish_with_settings(settings)
-        create_exchange(settings['direct_name'], @queue_name, settings['routing_key'])
+        create_exchange(settings[:direct_name], @queue_name, settings[:routing_key])
         payload = yield
         exchange.publish(payload, settings)
       end
@@ -41,7 +47,7 @@ module Heart
       def self.instance(queue_name, config_lookup = nil)
         config = Heart::Core::Config.instance[config_lookup || 'default/rabbit/publish_attributes']
         @instances = {} if @instances.nil?
-        @instances[queue_name] ||= DirectPublisher.new(queue_name, config)
+        @instances[queue_name] ||= DirectPublisher.new(queue_name, config).connect_exchange
       end
     end
   end

@@ -8,7 +8,9 @@ module Heart
   module Core
     class BunnyConnectionFactory
       def self.get_bunny
-        @conn ||= Bunny.new(build_path(Heart::Core::AppsSharedConfig.new.rabbit_config))
+        puts Heart::Core::AppsSharedConfig.new.rabbit_config
+        build_path = build_path(Heart::Core::AppsSharedConfig.new.rabbit_config)
+        @conn ||= Bunny.new(build_path)
         @conn.start
         @conn
       end

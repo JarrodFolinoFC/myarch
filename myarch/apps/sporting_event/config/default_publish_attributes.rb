@@ -5,6 +5,7 @@ require 'securerandom'
 Heart::Core::Config.instance.set_config('default/rabbit/publish_attributes') do
   # Publisher config
   direct_name 'direct_one'
+  exchange_name 'ex1'
 
   # standard bunny/rabbitmq properties
   routing_key 'routing_key_one'
