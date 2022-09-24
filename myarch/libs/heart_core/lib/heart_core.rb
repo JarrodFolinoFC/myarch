@@ -3,7 +3,7 @@ active_record/active_model_helper
 active_record/outbox_acks
 active_record/outbox_message
 asynchronous/event_listener
-asynchronous/direct_publisher
+asynchronous/rabbit_publisher
 asynchronous/outbox_publisher
 asynchronous/queue_manager
 asynchronous/outbox_poller
@@ -13,7 +13,8 @@ config/config
 config/configuration_dsl
 config/defaults
 discovery/registry
-abstractions/bunny_connection_factory
+factories/bunny_connection_factory
+factories/publisher_factory
 abstractions/db_connection
 abstractions/logger
 ].each do |lib|

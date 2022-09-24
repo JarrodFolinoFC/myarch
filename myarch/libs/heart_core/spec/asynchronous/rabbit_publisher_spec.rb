@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Heart::Core::DirectPublisher do
+RSpec.describe Heart::Core::RabbitPublisher do
   describe 'initialize' do
     before do
       @instance = described_class.new('queue_name', nil, nil)

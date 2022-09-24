@@ -1,5 +1,6 @@
 require_relative '../active_record/outbox_message'
-require_relative 'direct_publisher'
+require_relative 'rabbit_publisher'
+require_relative '../factories/publisher_factory'
 
 require 'json'
 
@@ -7,7 +8,7 @@ module Heart
   module Core
     class OutboxPoller
       DEFAULT_DB_MODEL = OutboxMessage
-      DEFAULT_PUBLISHER = DirectPublisher
+      DEFAULT_PUBLISHER = ::Heart::Core::PublisherFactory
 
       attr_reader :db_model, :publisher_class
 

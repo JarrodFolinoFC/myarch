@@ -79,7 +79,7 @@ end
 
 desc 'Publish All Sporting Events'
 task :publish_all, [:publisher_class] => 'db:connect' do |_t, args|
-  args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
+  args.with_defaults(publisher_class: 'Heart::Core::PublisherFactory')
   publisher_class = Object.const_get(args[:publisher_class])
   publisher_class.instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
 end
@@ -88,14 +88,14 @@ desc 'Publish All Sporting Events'
 task :publish_test => 'db:connect' do
   settings = Heart::Core::Config.instance['default/rabbit/publish_attributes']
   settings = Heart::Core::Config.evaluate_hash(settings)
-  Heart::Core::DirectPublisher.instance('sporting_event_create').publish_with_settings(settings) {
+  Heart::Core::PublisherFactory.instance('sporting_event_create').publish_with_settings(settings) {
     CsvReader.parse_csv('data.csv')
   }
 end
 
 desc 'Publish Single Sporting Event'
 task :publish, [:internal_id] do |_t, args|
-  args.with_defaults(publisher_class: 'Heart::Core::DirectPublisher')
+  args.with_defaults(publisher_class: 'Heart::Core::PublisherFactory')
   internal_id = args[:internal_id]
   publisher_class = Object.const_get(args[:publisher_class])
   data = JSON.parse(CsvReader.parse_csv('data.csv')).select { |obj| obj['internal_id'] == internal_id }.to_json

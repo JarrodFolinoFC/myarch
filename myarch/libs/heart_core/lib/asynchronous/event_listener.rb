@@ -25,7 +25,7 @@ module Heart
       end
 
       def after_send_confirmation(_delivery_info, properties, _body)
-        DirectPublisher.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').publish do
+        PublisherFactory.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').publish do
           {
             correlation_id: properties[:correlation_id],
             application_name: 'App Name',
