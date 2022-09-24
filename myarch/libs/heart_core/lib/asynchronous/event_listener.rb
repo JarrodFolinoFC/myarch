@@ -25,7 +25,7 @@ module Heart
       end
 
       def after_send_confirmation(_delivery_info, properties, _body)
-        DirectPublisher.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').connect_exchange.publish do
+        DirectPublisher.instance(properties[:reply_to], 'rabbit/reply_to/publish_attributes').publish do
           {
             correlation_id: properties[:correlation_id],
             application_name: 'App Name',
@@ -37,7 +37,7 @@ module Heart
       def self.instance(queue_name)
         # settings = Heart::Core::Config.instance[config_lookup || 'default/rabbit/listener_attributes']
         @instances = {} if @instances.nil?
-        conn = BunnyConnectionFactory2.conn
+        conn = BunnyConnectionFactory.conn
         @instances[queue_name] ||= EventListener.new(queue_name, conn)
       end
     end
