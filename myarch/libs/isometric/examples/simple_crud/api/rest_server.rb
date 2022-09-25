@@ -3,7 +3,7 @@
 require 'sinatra'
 
 require 'active_record'
-require_relative '../../../libs/isometric/lib/isometric'
+require_relative '../../../lib/isometric'
 require_relative '../config/db'
 require_relative '../models/sporting_event'
 

@@ -4,8 +4,9 @@ require 'json'
 
 module Isometric
   class EventListener
-    def initialize(queue)
+    def initialize(queue, settings = nil)
       @queue = queue
+      @settings = settings
     end
 
     def listen

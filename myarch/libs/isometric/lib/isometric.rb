@@ -9,8 +9,6 @@
   asynchronous/outbox_publisher
   asynchronous/outbox_poller
   asynchronous/queue_manager
-  config/app_config
-  config/app_shared_config
   config/config
   config/configuration_dsl
   config/defaults

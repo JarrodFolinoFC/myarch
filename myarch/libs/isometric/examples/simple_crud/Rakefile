@@ -6,9 +6,7 @@ require '../../lib/isometric'
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
 
-%w[about db default_publish_attributes default_listener_attributes reply_to_attributes bunny].each do |file|
-  require_relative "config/#{file}"
-end
+Dir['config/*'].each { |file| require_relative file }
 
 desc 'Clean Sporting Event'
 task clean: 'db:connect' do

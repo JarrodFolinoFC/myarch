@@ -8,6 +8,10 @@ module Isometric
       @instance ||= Isometric::Config.new
     end
 
+    def self.clean
+      @instance = nil
+    end
+
     def self.evaluate_hash(hash)
       new_map = {}
       hash.map do |k, v|
