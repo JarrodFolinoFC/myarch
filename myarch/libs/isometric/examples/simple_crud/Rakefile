@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rake'
-require '../../libs/isometric/lib/isometric'
+require '../../lib/isometric'
 
 require_relative 'models/sporting_event'
 require_relative 'lib/csv_reader'
