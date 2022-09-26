@@ -50,11 +50,6 @@ task summary: 'db:connect' do
 end
 
 namespace :run do
-  desc 'Run Sporting Event REST Server'
-  task :server do
-    ruby "#{__dir__}/api/rest_server.rb"
-  end
-
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
     Isometric::EventListenerFactory.instance('sporting_event_create').listen do |payload|
@@ -64,9 +59,19 @@ namespace :run do
     end
   end
 
-  desc 'Run Sporting Event Created Listener'
-  task created_listener: 'db:connect' do
-    Isometric::EventListenerFactory.instance('sporting_event_created').listen { |payload| puts payload }
+  desc 'Run Update Sporting Event Listener'
+  task update_listener: 'db:connect' do
+
+  end
+
+  desc 'Run Delete Sporting Event Listener'
+  task update_listener: 'db:connect' do
+
+  end
+
+  desc 'Run Sporting Event Callback Listener'
+  task callback_listener: 'db:connect' do
+    Isometric::EventListenerFactory.instance('sporting_event_callback').listen { |payload| puts payload }
   end
 
   desc 'Run Polling Publisher'
@@ -80,15 +85,6 @@ task :publish_all, [:publisher_class] => 'db:connect' do |_t, args|
   args.with_defaults(publisher_class: 'Isometric::PublisherFactory')
   publisher_class = Object.const_get(args[:publisher_class])
   publisher_class.instance('sporting_event_create').publish { CsvReader.parse_csv('data.csv') }
-end
-
-desc 'Publish All Sporting Events'
-task :publish_test => 'db:connect' do
-  settings = Isometric::Config.instance['default/rabbit/publish_attributes']
-  settings = Isometric::Config.evaluate_hash(settings)
-  Isometric::PublisherFactory.instance('sporting_event_create').publish_with_settings(settings) {
-    CsvReader.parse_csv('data.csv')
-  }
 end
 
 desc 'Publish Single Sporting Event'
@@ -112,14 +108,7 @@ desc 'Run DB Reply Listener'
 task :db_reply_listener do
   Isometric::EventListenerFactory.instance('reply_to').listen do |payload|
     Isometric::OutboxMessage.ack!(payload[:correlation_id],
-                                    payload[:application_name],
-                                    payload[:message])
-  end
-end
-
-task :bunny_test do
-  Isometric::EventListenerFactory.instance('sporting_event').listen do |payload|
-    sporting_events = Isometric::ActiveModelHelper.build_all(SportingEvent, JSON.parse(payload))
-    sporting_events.map(&:save!)
+                                  payload[:application_name],
+                                  payload[:message])
   end
 end
