@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+require 'pry'
 module Isometric
   class ConfigurationDSL
-    attr_reader :config, :namespace
+    attr_reader :config, :namespace, :namespace_stack
 
     def initialize
       @config = {}
@@ -38,9 +39,6 @@ module Isometric
     end
 
     def method_missing(method_name, *args, &block)
-      if @namespace_stack.size > 1
-        binding.pry
-      end
       namespace[method_name] = if block_given?
                                  proc { |*proc_args| block.call(*proc_args) }
                                else

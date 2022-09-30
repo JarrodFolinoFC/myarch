@@ -18,6 +18,7 @@
   factories/publisher_factory
   factories/event_listener_factory
   factories/db_connection
+  factories/outbox_publisher_factory
   factories/logger
 ].each do |lib|
   require_relative lib

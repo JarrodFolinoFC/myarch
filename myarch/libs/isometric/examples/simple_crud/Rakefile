@@ -50,6 +50,11 @@ task summary: 'db:connect' do
 end
 
 namespace :run do
+  desc 'Run API'
+  task :api do
+    ruby 'rackup api/config.ru'
+  end
+
   desc 'Run Create Sporting Event Listener'
   task create_listener: 'db:connect' do
     Isometric::EventListenerFactory.instance('sporting_event_create').listen do |payload|
@@ -65,7 +70,7 @@ namespace :run do
   end
 
   desc 'Run Delete Sporting Event Listener'
-  task update_listener: 'db:connect' do
+  task delete_listener: 'db:connect' do
 
   end
 

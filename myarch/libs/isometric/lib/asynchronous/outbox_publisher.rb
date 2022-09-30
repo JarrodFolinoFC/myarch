@@ -3,7 +3,7 @@
 require_relative '../active_record/outbox_message'
 module Isometric
   class OutboxPublisher
-    def initialize(queue_name, settings)
+    def initialize(queue_name, settings = {})
       @queue_name = queue_name
       @name = settings[:direct]
       @routing_key = settings[:routing_key]
@@ -19,12 +19,6 @@ module Isometric
       create_outbox_record(model.attributes)
     end
 
-    def self.instance(queue_name, config_lookup = nil)
-      config = Isometric::Config.instance[config_lookup || 'default/rabbit/publish_attributes']
-      @instances = {} if @instances.nil?
-      @instances[queue_name] ||= OutboxPublisher.new(queue_name, config)
-    end
-
     private
 
     def create_outbox_record(payload)
@@ -34,6 +28,7 @@ module Isometric
         payload: payload.to_json,
         headers: evaluated_hash.to_json
       )
+      evaluated_hash[:correlation_id]
     end
   end
 end

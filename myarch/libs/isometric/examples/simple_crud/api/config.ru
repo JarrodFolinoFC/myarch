@@ -1,4 +1,4 @@
-require_relative 'api'
+require_relative 'root'
 
-SimpleCrud::API.compile!
-run SimpleCrud::API
+API::Root.compile!
+run API::Root

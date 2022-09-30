@@ -11,8 +11,8 @@ module Isometric
     def purge_all(queues)
       queues.each do |queue|
         @channel.queue_purge(queue)
-      rescue StandardError
-        Bunny::NotFound
+      rescue Bunny::NotFound
+
       end
     end
   end

@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-require 'grape'
 require 'active_record'
+require 'grape-swagger'
+require 'grape'
+
 require_relative '../../../lib/isometric'
 
 require_relative '../config/db'
 require_relative '../config/bunny'
 require_relative '../config/rabbit_cluster'
+require_relative '../config/about'
+require_relative '../config/default_publish_attributes'
 require_relative '../config/logger'
 require_relative '../models/sporting_event'
 
@@ -20,7 +24,7 @@ module SimpleCrud
     prefix :api
 
     desc 'Return all sporting events.'
-    get :sporting_event do
+    get :sporting_events do
       SportingEvent.limit(20)
     end
 
@@ -44,13 +48,14 @@ module SimpleCrud
         requires :location, type: String, desc: 'Your status.'
       end
       post do
-        Isometric::PublisherFactory.instance('sporting_event_create').publish do
+        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_create').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
             location: params[:location]
           }
         end
+        {correlation_id: corr_id}
       end
 
       desc 'Update a sporting event.'
@@ -59,12 +64,13 @@ module SimpleCrud
         requires :status, type: String, desc: 'Your status.'
       end
       put do
-        Isometric::PublisherFactory.instance('sporting_event_update').publish do
+        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_update').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
             location: params[:location]
           }
+          {correlation_id: corr_id}
         end
       end
 
@@ -73,12 +79,14 @@ module SimpleCrud
         requires :id, type: String, desc: 'Status ID.'
       end
       delete ':id' do
-        Isometric::PublisherFactory.instance('sporting_event_delete').publish do
+        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_delete').publish do
           {
             internal_id: params[:internal_id]
           }
         end
+        {correlation_id: corr_id}
       end
+
     end
   end
 end
