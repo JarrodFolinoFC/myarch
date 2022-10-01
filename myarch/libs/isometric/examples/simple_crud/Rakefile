@@ -66,12 +66,10 @@ namespace :run do
 
   desc 'Run Update Sporting Event Listener'
   task update_listener: 'db:connect' do
-
   end
 
   desc 'Run Delete Sporting Event Listener'
   task delete_listener: 'db:connect' do
-
   end
 
   desc 'Run Sporting Event Callback Listener'
@@ -81,7 +79,7 @@ namespace :run do
 
   desc 'Run Polling Publisher'
   task outbox_poller: 'db:connect' do
-    Isometric::OutboxPoller.new.run
+    Isometric::OutboxPollerFactory.instance('queuename')
   end
 end
 

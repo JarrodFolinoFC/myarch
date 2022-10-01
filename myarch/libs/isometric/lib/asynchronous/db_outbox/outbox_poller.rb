@@ -7,14 +7,11 @@ require 'json'
 
 module Isometric
   class OutboxPoller
-    DEFAULT_DB_MODEL = OutboxMessage
-    DEFAULT_PUBLISHER = ::Isometric::OutboxPublisherFactory
-
     attr_reader :db_model, :publisher_class
 
-    def initialize(db_model: nil, publisher_class: nil)
-      @db_model = db_model || DEFAULT_DB_MODEL
-      @publisher_class = publisher_class || DEFAULT_PUBLISHER
+    def initialize(db_model = nil, publisher = nil)
+      @db_model = db_model
+      @publisher = publisher
     end
 
     def run
@@ -31,4 +28,3 @@ module Isometric
     end
   end
 end
-

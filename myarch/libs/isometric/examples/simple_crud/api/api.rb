@@ -48,14 +48,14 @@ module SimpleCrud
         requires :location, type: String, desc: 'Your status.'
       end
       post do
-        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_create').publish do
+        corr_id = ::Isometric::PublisherFactory.instance('sporting_event_create').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
             location: params[:location]
-          }
+          }.to_json
         end
-        {correlation_id: corr_id}
+        { correlation_id: corr_id }
       end
 
       desc 'Update a sporting event.'
@@ -71,7 +71,7 @@ module SimpleCrud
             location: params[:location]
           }
         end
-        {correlation_id: corr_id}
+        { correlation_id: corr_id }
       end
 
       desc 'Delete a sporting event.'
@@ -84,9 +84,8 @@ module SimpleCrud
             internal_id: params[:internal_id]
           }
         end
-        {correlation_id: corr_id}
+        { correlation_id: corr_id }
       end
-
     end
   end
 end

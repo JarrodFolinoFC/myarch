@@ -12,7 +12,6 @@ module Isometric
       queues.each do |queue|
         @channel.queue_purge(queue)
       rescue Bunny::NotFound
-
       end
     end
   end

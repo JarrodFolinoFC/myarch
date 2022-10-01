@@ -8,6 +8,7 @@
   asynchronous/db_outbox/factories/outbox_publisher_factory
   asynchronous/db_outbox/hooks/db_confirmation.rb
   asynchronous/db_outbox/outbox_poller
+  asynchronous/db_outbox/outbox_publisher
 
   asynchronous/base_event_listener
   asynchronous/rabbitmq/event_listener
@@ -18,7 +19,7 @@
   asynchronous/rabbitmq/factories/event_listener_factory
   asynchronous/rabbitmq/factories/publisher_factory
   asynchronous/rabbitmq/factories/queue_manager_factory
-  asynchronous/rabbitmq/hooks/publish_confirmation
+  asynchronous/rabbitmq/hooks
 
   config/config
   config/configuration_dsl

@@ -9,15 +9,15 @@ Isometric::Config.instance.set_config('default/rabbit/publish_attributes') do
   routing_key 'routing_key_one'
 
   # rabbitmq basic.properties
-  app_id { Isometric::Config.instance['app']['app-name'] }
-  content_type 'application/json'
-  content_encoding ''
-  delivery_mode ''
-  timestamp { Time.now }
-  expiration { Time.now }
-  type 'type'
-  reply_to 'reply_queue'
-  priority 1
+  # app_id { Isometric::Config.instance['app']['app-name'] }
+  # content_type 'application/json'
+  # content_encoding ''
+  # delivery_mode ''
+  # timestamp { Time.now }
+  # expiration { Time.now }
+  # type 'type'
+  # reply_to 'reply_queue'
+  # priority 1
   message_id { SecureRandom.hex }
   correlation_id { SecureRandom.hex }
   # user_id 123

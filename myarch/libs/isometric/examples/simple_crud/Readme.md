@@ -1,6 +1,5 @@
 brew install overmind
 
-* change directory structure
 * rest test
 * add citations
 

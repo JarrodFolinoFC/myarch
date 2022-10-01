@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../active_record/outbox_message'
+require_relative 'models/outbox_message'
 module Isometric
   class OutboxPublisher
     def initialize(queue_name, settings = {})

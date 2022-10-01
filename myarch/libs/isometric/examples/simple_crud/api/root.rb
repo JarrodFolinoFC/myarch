@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'api'
 require 'grape-swagger'
 require 'grape'

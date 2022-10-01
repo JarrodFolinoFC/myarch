@@ -20,6 +20,7 @@ module Isometric
       evaluated_hash = Isometric::Config.evaluate_hash(@settings)
       payload = yield
       exchange.publish(payload, evaluated_hash)
+      nil
     end
 
     def publish_with_settings(settings)
