@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require_relative '../active_record/outbox_message'
-require_relative 'rabbit_publisher'
-require_relative '../factories/publisher_factory'
+require_relative 'models/outbox_message'
+require_relative 'factories/outbox_publisher_factory'
 
 require 'json'
 
 module Isometric
   class OutboxPoller
     DEFAULT_DB_MODEL = OutboxMessage
-    DEFAULT_PUBLISHER = ::Isometric::PublisherFactory
+    DEFAULT_PUBLISHER = ::Isometric::OutboxPublisherFactory
 
     attr_reader :db_model, :publisher_class
 

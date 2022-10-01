@@ -2,23 +2,31 @@
 
 %w[
   active_record/active_model_helper
-  active_record/outbox_acks
-  active_record/outbox_message
-  asynchronous/event_listener
-  asynchronous/rabbit_publisher
-  asynchronous/outbox_publisher
-  asynchronous/outbox_poller
-  asynchronous/queue_manager
+
+  asynchronous/db_outbox/models/outbox_acks
+  asynchronous/db_outbox/models/outbox_message
+  asynchronous/db_outbox/factories/outbox_publisher_factory
+  asynchronous/db_outbox/hooks/db_confirmation.rb
+  asynchronous/db_outbox/outbox_poller
+
+  asynchronous/base_event_listener
+  asynchronous/rabbitmq/event_listener
+  asynchronous/rabbitmq/rabbit_publisher
+  asynchronous/rabbitmq/queue_manager
+  asynchronous/rabbitmq/default_rabbit_message_headers
+  asynchronous/rabbitmq/factories/bunny_connection_factory
+  asynchronous/rabbitmq/factories/event_listener_factory
+  asynchronous/rabbitmq/factories/publisher_factory
+  asynchronous/rabbitmq/factories/queue_manager_factory
+  asynchronous/rabbitmq/hooks/publish_confirmation
+
   config/config
   config/configuration_dsl
   config/defaults
+
   discovery/registry
-  factories/queue_manager_factory
-  factories/bunny_connection_factory
-  factories/publisher_factory
-  factories/event_listener_factory
+
   factories/db_connection
-  factories/outbox_publisher_factory
   factories/logger
 ].each do |lib|
   require_relative lib

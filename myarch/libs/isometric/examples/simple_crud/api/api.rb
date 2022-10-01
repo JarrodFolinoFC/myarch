@@ -70,8 +70,8 @@ module SimpleCrud
             event_date: params[:event_date], venue: params[:venue],
             location: params[:location]
           }
-          {correlation_id: corr_id}
         end
+        {correlation_id: corr_id}
       end
 
       desc 'Delete a sporting event.'
