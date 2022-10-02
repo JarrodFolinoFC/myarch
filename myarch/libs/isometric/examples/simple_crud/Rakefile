@@ -33,7 +33,7 @@ desc 'Sporting Event Summary'
 task summary: 'db:connect' do
   puts '' "
   Discovery Summary
-  #{Isometric::Discovery::Registry.new.summary('app/')}
+  #{Isometric::Discovery::Registry.new(Redis.new).summary('app/')}
   " ''
 
   puts '' "

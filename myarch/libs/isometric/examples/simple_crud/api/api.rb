@@ -15,7 +15,7 @@ require_relative '../config/logger'
 require_relative '../models/sporting_event'
 
 Isometric::DbConnection.connect!
-Isometric::Discovery::Registry.new.set('app/sporting_event_rest_server', 'http://localhost:4567')
+Isometric::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
 
 module SimpleCrud
   class API < Grape::API

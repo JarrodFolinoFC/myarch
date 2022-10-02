@@ -26,9 +26,12 @@
   config/defaults
 
   discovery/registry
+  discovery/factories/registry_factory
 
   factories/db_connection
   factories/logger
+
+  citations/citation
 ].each do |lib|
   require_relative lib
 end

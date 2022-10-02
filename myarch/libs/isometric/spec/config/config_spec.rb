@@ -15,9 +15,6 @@ RSpec.describe Isometric::Config do
         overidden_value 'overidden_value2'
         nested(:child) do
           value 'childvalue'
-          # nested(:grandchild) do
-          #   value 'grandchildvalue'
-          # end
         end
         after_nest_value 'toplevel'
         nested(:child) do
@@ -46,10 +43,6 @@ RSpec.describe Isometric::Config do
     it 'sets a namespaced value for a namespace already declared' do
       expect(config[config_name][:child][:value2]).to eq('childvalue2')
     end
-
-    # it 'sets a nested namespaced value' do
-    #   expect(config[config_name][:child][:grandchild][:value]).to eq('grandchildvalue')
-    # end
 
     it 'the namespace returns to the top level after the nested' do
       expect(config[config_name][:after_nest_value]).to eq('toplevel')

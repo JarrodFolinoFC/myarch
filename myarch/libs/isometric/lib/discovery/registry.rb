@@ -5,8 +5,8 @@ require 'redis'
 module Isometric
   module Discovery
     class Registry
-      def initialize
-        @redis = Redis.new
+      def initialize(redis)
+        @redis = redis
       end
 
       def set(name, props)
