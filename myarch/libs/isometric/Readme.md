@@ -1,8 +1,7 @@
 # HC todos
 * regression test
 * listener publish to auto response listener
-* grape swagger
-  * strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html
+* strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html
 * listener DB inbox
 
 * after_send_confirmation

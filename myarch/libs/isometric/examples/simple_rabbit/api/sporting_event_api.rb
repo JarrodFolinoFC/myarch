@@ -6,12 +6,10 @@ require 'grape'
 
 require_relative '../../../lib/isometric'
 
-require_relative '../config/db'
-require_relative '../config/bunny'
-require_relative '../config/rabbit_cluster'
-require_relative '../config/about'
-require_relative '../config/default_publish_attributes'
-require_relative '../config/logger'
+%w[db bunny rabbit_cluster about default_publish_attributes logger].each do |file|
+  require_relative "../config/#{file}"
+end
+
 require_relative '../models/sporting_event'
 
 Isometric::DbConnection.connect!
@@ -61,18 +59,18 @@ module API
       desc 'Update a sporting event.'
       params do
         requires :internal_id, type: String, desc: 'Your status.'
-        requires :name, type: String, desc: 'Your status.'
-        requires :event_date, type: String, desc: 'Your status.'
-        requires :venue, type: String, desc: 'Your status.'
-        requires :location, type: String, desc: 'Your status.'
+        optional :name, type: String, desc: 'Your status.'
+        optional :event_date, type: String, desc: 'Your status.'
+        optional :venue, type: String, desc: 'Your status.'
+        optional :location, type: String, desc: 'Your status.'
       end
       put do
-        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_update').publish do
+        corr_id = Isometric::PublisherFactory.instance('sporting_event_update').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
             location: params[:location]
-          }
+          }.to_json
         end
         { correlation_id: corr_id }
       end
@@ -81,11 +79,11 @@ module API
       params do
         requires :internal_id, type: String, desc: 'Your status.'
       end
-      delete ':id' do
-        corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_delete').publish do
+      post ':internal_id' do
+        corr_id = Isometric::PublisherFactory.instance('sporting_event_delete').publish do
           {
             internal_id: params[:internal_id]
-          }
+          }.to_json
         end
         { correlation_id: corr_id }
       end
