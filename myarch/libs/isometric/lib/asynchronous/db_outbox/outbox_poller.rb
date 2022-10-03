@@ -18,13 +18,15 @@ module Isometric
       Isometric::Logger.instance.info("#{self.class} started polling #{db_model}")
       loop do
         query = db_model.where(last_published_at: nil).or(db_model.where.not('updated_at != last_published_at'))
-        query.each do |msg|
-          publisher_class.instance(msg.queue).publish do
-            msg.payload
-          end
-          msg.update(last_published_at: msg.updated_at)
-        end
+        query.each(&method(:process))
       end
+    end
+
+    def process(msg)
+      publisher_class.instance(msg.queue).publish do
+        msg.payload
+      end
+      msg.update(last_published_at: msg.updated_at)
     end
   end
 end

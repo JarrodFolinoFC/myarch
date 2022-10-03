@@ -2,16 +2,17 @@
 
 require 'spec_helper'
 
+class Car
+  Citation.create(:singleton, ['https://springframework.guru/gang-of-four-design-patterns/'])
+  Citation.add(:singleton)
+  def self.instance
+    @instance ||= Car.new
+  end
+end
+
+
 RSpec.describe Citation do
   Citation.set_root
-
-  class Car
-    Citation.create(:singleton, ['https://springframework.guru/gang-of-four-design-patterns/'])
-    Citation.add(:singleton)
-    def self.instance
-      @instance ||= Car.new
-    end
-  end
 
   it 'sets the root' do
     expect(Citation.root).to eq('/Users/jarrod.folino/Dev/research/myarch/libs/isometric/spec/citations')

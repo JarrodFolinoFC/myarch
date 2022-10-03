@@ -21,31 +21,8 @@ module Isometric
       @namespace = @config
     end
 
-    def build_namespace
-      config = {}
-      namespace_stack = %i[a b c d]
-      namespace_stack.size.times do |num|
-        case num
-        when 0
-          config[namespace_stack.first] = {} unless config[namespace_stack.first]
-        when 1
-          unless config[namespace_stack.first][namespace_stack[1]]
-            config[namespace_stack.first][namespace_stack[1]] =
-              {}
-          end
-        when 2
-          unless config[namespace_stack.first][namespace_stack[1]][namespace_stack[2]]
-            config[namespace_stack.first][namespace_stack[1]][namespace_stack[2]] =
-              {}
-          end
-        when 3
-          unless config[namespace_stack.first][namespace_stack[1]][namespace_stack[2]][namespace_stack[3]]
-            config[namespace_stack.first][namespace_stack[1]][namespace_stack[2]][namespace_stack[3]] =
-              {}
-          end
-        end
-      end
-      puts config.inspect
+    def respond_to_missing?
+      true
     end
 
     def method_missing(method_name, *args, &block)

@@ -12,6 +12,7 @@ module Isometric
       queues.each do |queue|
         @channel.queue_purge(queue)
       rescue Bunny::NotFound
+        Isometric::Logger.instance("#{queue} not found")
       end
     end
   end

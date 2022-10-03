@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require_relative 'sample_config'
+
+Isometric::Config.instance.set_config('config1') do
+  simple_value 'simple_value'
+  overidden_value 'overidden_value1'
+  overidden_value 'overidden_value2'
+  nested(:child) do
+    value 'childvalue'
+  end
+  after_nest_value 'toplevel'
+  nested(:child) do
+    value2 'childvalue2'
+  end
+end
 
 RSpec.describe Isometric::Config do
   after do
