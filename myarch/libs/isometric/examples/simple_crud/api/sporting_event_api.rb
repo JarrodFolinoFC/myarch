@@ -17,8 +17,8 @@ require_relative '../models/sporting_event'
 Isometric::DbConnection.connect!
 Isometric::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
 
-module SportingEvent
-  class API < Grape::API
+module API
+  class SportingEvent < Grape::API
     version 'v1', using: :header, vendor: 'acme'
     format :json
     prefix :api

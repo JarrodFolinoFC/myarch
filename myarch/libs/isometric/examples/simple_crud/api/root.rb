@@ -7,7 +7,7 @@ require 'grape'
 module API
   class Root < Grape::API
     format :json
-    mount SportingEvent::API
+    mount API::SportingEvent
     add_swagger_documentation hide_documentation_path: true,
                               api_version: 'v1',
                               info: {
