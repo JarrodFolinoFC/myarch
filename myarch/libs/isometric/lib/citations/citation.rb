@@ -15,7 +15,9 @@ class Citation
     end
 
     def add(name)
+      puts @root
       full_path = caller[0]
+      puts full_path
       relative_path = full_path.sub(@root, '').gsub(/['`]/, '')
       @encyclopedia[name.to_sym][:references] = @encyclopedia[name.to_sym][:references] + [relative_path]
     end
