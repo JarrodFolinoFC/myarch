@@ -1,17 +1,18 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'json'
 
 require_relative '../../listeners/sporting_event/created'
 
 RSpec.describe 'simple flow' do
-  let(:sporting_event_created_listener) {
+  let(:sporting_event_created_listener) do
     Isometric::EventListenerFactory.instance('sporting_event_create',
-      klass: Listener::SportingEvent::Created,
-      settings: {
-        after_hooks: [Isometric::RabbitHooks::CLOSE_CHANNEL]
-      }
-    )
-  }
+                                             klass: Listener::SportingEvent::Created,
+                                             settings: {
+                                               after_hooks: [Isometric::RabbitHooks::CLOSE_CHANNEL]
+                                             })
+  end
 
   let(:params) do
     {

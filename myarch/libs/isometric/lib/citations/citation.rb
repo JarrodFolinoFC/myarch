@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 class Citation
   class << self
     def set_root
-      fragments = caller[0].split(/\//)
+      fragments = caller[0].split(%r{/})
       @root = fragments[0, fragments.size - 1].join('/')
-
     end
 
     def create(name, links)
@@ -19,12 +20,6 @@ class Citation
       @encyclopedia[name.to_sym][:references] = @encyclopedia[name.to_sym][:references] + [relative_path]
     end
 
-    def encyclopedia
-      @encyclopedia
-    end
-
-    def root
-      @root
-    end
+    attr_reader :encyclopedia, :root
   end
 end

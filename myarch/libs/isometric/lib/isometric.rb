@@ -6,6 +6,7 @@
   asynchronous/db_outbox/models/outbox_acks
   asynchronous/db_outbox/models/outbox_message
   asynchronous/db_outbox/factories/outbox_publisher_factory
+  asynchronous/db_outbox/factories/outbox_poller_factory
   asynchronous/db_outbox/hooks/db_confirmation.rb
   asynchronous/db_outbox/outbox_poller
   asynchronous/db_outbox/outbox_publisher
@@ -35,3 +36,5 @@
 ].each do |lib|
   require_relative lib
 end
+
+Citation.set_root

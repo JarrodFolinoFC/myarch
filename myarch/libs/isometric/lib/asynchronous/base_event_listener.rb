@@ -14,14 +14,11 @@ module Isometric
     def call
       Isometric::Logger.instance.info("#{self.class} started on queue: #{@queue}")
       queue.subscribe(block: true) do |delivery_info, metadata, payload|
-        @before_hooks&.each do |hook| hook.call(queue, delivery_info, metadata, payload) end
+        @before_hooks&.each { |hook| hook.call(queue, delivery_info, metadata, payload) }
         listen(delivery_info, metadata, payload)
         Isometric::Logger.instance.info('Message Processed')
-        @after_hooks&.each do |hook|
-          hook.call(queue, delivery_info, metadata, payload)
-        end
+        @after_hooks&.each { |hook| hook.call(queue, delivery_info, metadata, payload) }
       end
     end
-
   end
 end

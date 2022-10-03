@@ -2,5 +2,5 @@
 
 require 'spec_helper'
 
-RSpec.describe Isometric::BaseEventListener do
+RSpec.describe Isometric::OutboxAck do
 end

@@ -11,6 +11,13 @@
 * specs
 * code generators https://github.com/rails/thor/wiki 
 
+Philosphy: MADPA
+
+* Making Development Fun And Productive For the Common Developer => Developer productivity and fun over performance/edge cases 
+* For the everyday developer => Simplify proven patterns and reference them
+* Ease of configuration => One Central location for all config with sensible defaults
+* Ease of understanding => Code as documentation
+
 Concepts:
 * Isometric::Reconcile
 * Isometric::Fetch

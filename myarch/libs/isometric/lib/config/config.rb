@@ -22,6 +22,7 @@ module Isometric
 
     def initialize
       @config = {}
+      @tags = []
     end
 
     def all
@@ -32,9 +33,10 @@ module Isometric
       @config[key]
     end
 
-    def set_config(key, &block)
+    def set_config(key, tags = [], &block)
       return if @config.key?(key)
 
+      @tags = tags
       @configuration_dsl = ConfigurationDSL.new
       @configuration_dsl.instance_eval(&block)
 

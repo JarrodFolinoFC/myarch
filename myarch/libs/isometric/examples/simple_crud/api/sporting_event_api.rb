@@ -17,7 +17,7 @@ require_relative '../models/sporting_event'
 Isometric::DbConnection.connect!
 Isometric::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
 
-module SimpleCrud
+module SportingEvent
   class API < Grape::API
     version 'v1', using: :header, vendor: 'acme'
     format :json
@@ -60,8 +60,11 @@ module SimpleCrud
 
       desc 'Update a sporting event.'
       params do
-        requires :id, type: String, desc: 'Status ID.'
-        requires :status, type: String, desc: 'Your status.'
+        requires :internal_id, type: String, desc: 'Your status.'
+        requires :name, type: String, desc: 'Your status.'
+        requires :event_date, type: String, desc: 'Your status.'
+        requires :venue, type: String, desc: 'Your status.'
+        requires :location, type: String, desc: 'Your status.'
       end
       put do
         corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_update').publish do
@@ -76,7 +79,7 @@ module SimpleCrud
 
       desc 'Delete a sporting event.'
       params do
-        requires :id, type: String, desc: 'Status ID.'
+        requires :internal_id, type: String, desc: 'Your status.'
       end
       delete ':id' do
         corr_id = Isometric::OutboxPublisherFactory.instance('sporting_event_delete').publish do

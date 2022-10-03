@@ -10,7 +10,7 @@ module Isometric
       conn.start
       ch = conn.create_channel
       queue = ch.queue(queue_name, auto_delete: true)
-      klass = klass || DEFAULT_CLASS
+      klass ||= DEFAULT_CLASS
       # one listener per queue
       @instances[queue_name] ||= klass.new(queue, settings)
     end
