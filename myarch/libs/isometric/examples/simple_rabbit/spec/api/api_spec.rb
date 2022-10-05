@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'json'
+require 'factory_bot'
 
 require_relative '../../listeners/sporting_event/created'
 require_relative '../../listeners/sporting_event/deleted'
@@ -16,20 +17,10 @@ end
 
 RSpec.describe 'simple flow' do
   let(:params) do
-    {
-      'internal_id' => '617',
-      'name' => 'UFC on ESPN: Vera vs. Cruz',
-      'event_date' => 'Aug 13, 2022',
-      'venue' => 'Pechanga Arena',
-      'location' => 'San Diego, California, U.S.'
-    }
+    create(:sporting_event)
   end
 
-  before do
-    SportingEvent.delete_all
-  end
-
-  describe 'POST /api/sporting_event', type: 'rabbitmq' do
+  describe 'POST /api/sporting_event', type: ['rabbitmq', 'activerecord'] do
     let(:sporting_event_created_listener) { listener_af(Listener::SportingEvent::Created, 'sporting_event_create') }
 
     before do
@@ -42,7 +33,7 @@ RSpec.describe 'simple flow' do
     end
   end
 
-  describe 'PUT /api/sporting_event', type: 'rabbitmq' do
+  describe 'PUT /api/sporting_event', type: ['rabbitmq', 'activerecord'] do
     let(:sporting_event_update_listener) { listener_af(Listener::SportingEvent::Updated, 'sporting_event_update') }
 
     before do
@@ -56,7 +47,7 @@ RSpec.describe 'simple flow' do
     end
   end
 
-  describe 'DELETE /api/sporting_event/s/delete', type: 'rabbitmq' do
+  describe 'DELETE /api/sporting_event/s/delete', type: ['rabbitmq', 'activerecord'] do
     let(:sporting_event_delete_listener) { listener_af(Listener::SportingEvent::Deleted, 'sporting_event_delete') }
 
     before do
