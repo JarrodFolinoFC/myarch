@@ -6,14 +6,14 @@ require 'grape'
 
 require_relative '../../../lib/isometric'
 
-%w[db bunny rabbit_cluster about default_publish_attributes logger].each do |file|
+%w[db bunny about default_publish_attributes logger].each do |file|
   require_relative "../config/#{file}"
 end
 
 require_relative '../models/sporting_event'
 
 Isometric::DbConnection.connect!
-Isometric::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
+Isometric::Discovery::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
 
 module API
   class SportingEvent < Grape::API
