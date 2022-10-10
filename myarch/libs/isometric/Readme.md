@@ -1,14 +1,29 @@
-# HC todos
-* regression test
-* listener publish to auto response listener
-* strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html
-* listener DB inbox
+# Iso todos
+## V1
+* normalise factories
+* e2e regression test with code
+* e2e regression test with rest
+* DB queue version
+* github actions
+* add citations
+* discovery UI
+* final overmind file
+* centralize rabbit config
+* centralize 
+* more logging
+* exception manager
+* project generator -> pets
 
+## V2
+* strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html
 * after_send_confirmation
 * make publishers a gem
-* github actions
-* specs
-* code generators https://github.com/rails/thor/wiki 
+* code generators
+* proper cli https://github.com/rails/thor/wiki 
+* jwt
+
+
+
 
 Philosphy: MADPA
 

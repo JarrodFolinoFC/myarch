@@ -4,7 +4,9 @@ module Isometric
   module Discovery
     class RegistryFactory
       def self.instance
-        @instance ||= Isometric::Discovery::Registry.new(Redis.new)
+        config = Isometric::Config.instance.all['redis']
+        redis = Redis.new(host: config[:host], port: config[:port])
+        @instance ||= Isometric::Discovery::Registry.new(redis)
       end
     end
   end

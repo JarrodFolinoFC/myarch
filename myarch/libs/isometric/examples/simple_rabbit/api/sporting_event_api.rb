@@ -6,7 +6,7 @@ require 'grape'
 
 require_relative '../../../lib/isometric'
 
-%w[db bunny about default_publish_attributes logger].each do |file|
+%w[db bunny about default_publish_attributes redis logger].each do |file|
   require_relative "../config/#{file}"
 end
 

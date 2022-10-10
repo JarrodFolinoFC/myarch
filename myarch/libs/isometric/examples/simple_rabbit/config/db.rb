@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 Isometric::Config.instance.set_config('database') do
-  adapter 'postgresql'
-  host 'tyke.db.elephantsql.com'
-  username 'tnemxqdp'
-  password 'DZVSYk6jNbXenJrVVhHHfhVRXk1KySbk'
-  database 'tnemxqdp'
+  adapter ENV['DB_ADAPTER']
+  host ENV['DB_HOST']
+  username ENV['DB_USERNAME']
+  password ENV['DB_PASSWORD']
+  database ENV['DB_DATABASE']
 end

@@ -3,9 +3,9 @@ export BUNNY_CONNECTION_PASSWORD=vVY06l9UE0lng3M3z74GB6wEUmEwKley
 export BUNNY_CONNECTION_SERVER=rattlesnake-01.rmq.cloudamqp.com
 export BUNNY_CONNECTION_VHOST=bcbxmqoc
 
-export DB_adapter=postgresql
-export DB_host=tyke.db.elephantsql.com
-export DB_username=tnemxqdp
-export DB_password=DZVSYk6jNbXenJrVVhHHfhVRXk1KySbk
-export DB_database=tnemxqdp
+export DB_ADAPTER=postgresql
+export DB_HOST=tyke.db.elephantsql.com
+export DB_USERNAME=tnemxqdp
+export DB_PASSWORD=DZVSYk6jNbXenJrVVhHHfhVRXk1KySbk
+export DB_DATABASE=tnemxqdp
 
