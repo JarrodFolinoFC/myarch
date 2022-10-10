@@ -2,10 +2,10 @@
 
 module Isometric
   module OutboxPublisherFactory
-    def self.instance(queue_name, config_lookup = nil)
-      config = Isometric::Config.instance[config_lookup || 'default/rabbit/publish_attributes'] || {}
+    def self.instance(queue_name:, isometric_lookup: nil, settings: {})
+      config = Isometric::Config.instance[isometric_lookup || 'default/rabbit/publish_attributes'] || {}
       @instances = {} if @instances.nil?
-      @instances[queue_name] ||= Isometric::OutboxPublisher.new(queue_name, config)
+      @instances[queue_name] ||= Isometric::OutboxPublisher.new(queue_name, config[:settings].merge(settings))
     end
   end
 end

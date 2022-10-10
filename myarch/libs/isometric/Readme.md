@@ -1,6 +1,7 @@
 # Iso todos
 ## V1
 * normalise factories
+
 * e2e regression test with code
 * e2e regression test with rest
 * DB queue version
@@ -12,7 +13,11 @@
 * centralize 
 * more logging
 * exception manager
-* project generator -> pets
+
+* project generator V1
+  * person 
+    * name
+  * UK address
 
 ## V2
 * strong etags: https://gemdocs.org/gems/grape-app/0.10.1/Grape/App/Helpers/Caching.html

@@ -3,7 +3,7 @@
 module Isometric
   class EventListenerFactory
     DEFAULT_CLASS = Isometric::EventListener
-    def self.instance(queue_name, klass: nil, settings: {})
+    def self.instance(queue_name:, klass: nil, settings: {})
       # settings = Isometric::Config.instance[config_lookup || 'default/rabbit/listener_attributes']
       @instances = {} if @instances.nil?
       conn = BunnyConnectionFactory.conn

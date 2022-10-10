@@ -6,7 +6,7 @@ require 'grape'
 
 require_relative '../../../lib/isometric'
 
-%w[db bunny about default_publish_attributes redis logger].each do |file|
+%w[db bunny default_publish_attributes redis logger].each do |file|
   require_relative "../config/#{file}"
 end
 
@@ -46,7 +46,7 @@ module API
         requires :location, type: String, desc: 'Your status.'
       end
       post do
-        corr_id = ::Isometric::PublisherFactory.instance('sporting_event_create').publish do
+        corr_id = ::Isometric::PublisherFactory.instance(queue_name: 'sporting_event_create').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
@@ -65,7 +65,7 @@ module API
         optional :location, type: String, desc: 'Your status.'
       end
       put do
-        corr_id = Isometric::PublisherFactory.instance('sporting_event_update').publish do
+        corr_id = Isometric::PublisherFactory.instance(queue_name: 'sporting_event_update').publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
@@ -80,7 +80,7 @@ module API
         requires :internal_id, type: String, desc: 'Your status.'
       end
       post ':internal_id' do
-        corr_id = Isometric::PublisherFactory.instance('sporting_event_delete').publish do
+        corr_id = Isometric::PublisherFactory.instance(queue_name: 'sporting_event_delete').publish do
           {
             internal_id: params[:internal_id]
           }.to_json

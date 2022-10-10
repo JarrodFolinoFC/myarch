@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'api'
+require_relative 'root'
 
 desc 'Print out routes'
 task :routes do

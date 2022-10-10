@@ -9,7 +9,7 @@ require_relative '../../listeners/sporting_event/deleted'
 require_relative '../../listeners/sporting_event/updated'
 
 def listener_af(listener, channel)
-  Isometric::EventListenerFactory.instance(channel,
+  Isometric::EventListenerFactory.instance(queue_name: channel,
                                            klass: listener,
                                            settings: { after_hooks: [Isometric::RabbitHooks::CLOSE_CHANNEL] }
   )

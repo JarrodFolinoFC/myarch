@@ -8,9 +8,9 @@ module Isometric
       attr_reader :connections
     end
 
-    def self.conn(config_key = nil)
+    def self.conn(isometric_lookup: nil, password: nil, server: nil, vhost: nil, user: nil)
       @connections ||= []
-      config = Isometric::Config.instance[config_key || Isometric::DEFAULT_BUNNY_CONNECTION_KEY]
+      config = Isometric::Config.instance[isometric_lookup || Isometric::DEFAULT_BUNNY_CONNECTION_KEY]
       cs = "amqps://#{config[:user]}:" \
     "#{config[:password]}" \
     "@#{config[:server]}" \
