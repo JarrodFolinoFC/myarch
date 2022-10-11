@@ -3,8 +3,8 @@
 require 'active_record'
 module Isometric
   class DbConnection
-    def self.connect!(config_key = nil)
-      config = Isometric::Config.instance[config_key || Isometric::DEFAULT_DATABASE_KEY]
+    def self.connect!(isometric_lookup: nil)
+      config = Isometric::Config.instance[isometric_lookup]
       ActiveRecord::Base.establish_connection(
         adapter: config[:adapter],
         host: config[:host],
@@ -12,6 +12,10 @@ module Isometric
         password: config[:password],
         database: config[:database]
       )
+    end
+
+    def self.connect_with_default!
+      connect!(isometric_lookup: Isometric::DEFAULT_DATABASE_KEY)
     end
   end
 end

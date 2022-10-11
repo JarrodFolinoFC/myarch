@@ -20,6 +20,31 @@ RSpec.describe 'simple flow' do
     create(:sporting_event)
   end
 
+  describe 'GET /api/sporting_events', type: ['activerecord'] do
+    before do
+      SportingEvent.create(FactoryBot.build(:sporting_event))
+      SportingEvent.create(FactoryBot.build(:sporting_event, internal_id: 618))
+    end
+
+    it 'fetches the event' do
+      result = get('/api/sporting_events')
+      body = JSON.parse(result.body)
+      expect(body.map{|e|e['internal_id']}).to eq(%w[617 618])
+    end
+  end
+
+  describe 'GET /api/sporting_event', type: ['activerecord'] do
+    before do
+      SportingEvent.create(FactoryBot.build(:sporting_event))
+    end
+
+    it 'fetches the event' do
+      result = get('/api/sporting_event/617')
+      body = JSON.parse(result.body)
+      expect(body['internal_id']).to eq('617')
+    end
+  end
+
   describe 'POST /api/sporting_event', type: ['rabbitmq', 'activerecord'] do
     let(:sporting_event_created_listener) { listener_af(Listener::SportingEvent::Created, 'sporting_event_create') }
 

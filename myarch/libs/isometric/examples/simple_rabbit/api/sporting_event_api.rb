@@ -12,7 +12,7 @@ end
 
 require_relative '../models/sporting_event'
 
-Isometric::DbConnection.connect!
+Isometric::DbConnection.connect_with_default!
 Isometric::Discovery::RegistryFactory.instance.set('app/sporting_event_rest_server', 'http://localhost:4567')
 
 module API
@@ -23,7 +23,7 @@ module API
 
     desc 'Return all sporting events.'
     get :sporting_events do
-      SportingEvent.limit(20)
+      ::SportingEvent.limit(20)
     end
 
     resource :sporting_event do
@@ -33,7 +33,7 @@ module API
       end
       route_param :internal_id do
         get do
-          SportingEvent.find_by(internal_id: params[:internal_id])
+          ::SportingEvent.find_by(internal_id: params[:internal_id])
         end
       end
 
@@ -46,7 +46,9 @@ module API
         requires :location, type: String, desc: 'Your status.'
       end
       post do
-        corr_id = ::Isometric::PublisherFactory.instance(queue_name: 'sporting_event_create').publish do
+        corr_id = ::Isometric::PublisherFactory.instance(
+          queue_name: 'sporting_event_create',
+          isometric_lookup: Isometric::DEFAULT_BUNNY_PUBLISH_KEY).publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
@@ -65,7 +67,9 @@ module API
         optional :location, type: String, desc: 'Your status.'
       end
       put do
-        corr_id = Isometric::PublisherFactory.instance(queue_name: 'sporting_event_update').publish do
+        corr_id = Isometric::PublisherFactory.instance(
+            queue_name: 'sporting_event_update',
+            isometric_lookup: Isometric::DEFAULT_BUNNY_PUBLISH_KEY).publish do
           {
             internal_id: params[:internal_id], name: params[:name],
             event_date: params[:event_date], venue: params[:venue],
@@ -80,7 +84,9 @@ module API
         requires :internal_id, type: String, desc: 'Your status.'
       end
       post ':internal_id' do
-        corr_id = Isometric::PublisherFactory.instance(queue_name: 'sporting_event_delete').publish do
+        corr_id = Isometric::PublisherFactory.instance(
+            queue_name: 'sporting_event_delete',
+            isometric_lookup: Isometric::DEFAULT_BUNNY_PUBLISH_KEY).publish do
           {
             internal_id: params[:internal_id]
           }.to_json

@@ -1,16 +1,13 @@
 # Iso todos
 ## V1
-* normalise factories
 
-* e2e regression test with code
 * e2e regression test with rest
 * DB queue version
 * github actions
 * add citations
-* discovery UI
+* discovery rake task
 * final overmind file
 * centralize rabbit config
-* centralize 
 * more logging
 * exception manager
 
